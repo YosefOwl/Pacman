@@ -2,11 +2,19 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
-public class WelcomeState extends GameState {
+public class ResultState extends GameState {
 
-	boolean active;
+	
+	private boolean active;
+	private int scores;
+	private String message;
+	
+	public ResultState() {
+		scores = 0;
+	}
 	
 	public void enter(Object memento) {
+		scores = (int)((PlayState) memento).getScores();
 		active = true;
 	}
 	
@@ -20,16 +28,18 @@ public class WelcomeState extends GameState {
 	public boolean isActive() { return active; }
 	
 	public String next() {
-		return "Play";
+		return "Welcome";
 	}
 
 	public void render(GameFrameBuffer aGameFrameBuffer) {
 		Graphics g = aGameFrameBuffer.graphics();
 		
-		String text = "PRESS ANY KEY TO PLAY";
+		String text = "PRESS ANY KEY TO PLAY AGAIN";
 		int textWidth = g.getFontMetrics().stringWidth(text);
 		g.setColor(Color.white);
 		g.drawString(text, (aGameFrameBuffer.getWidth()-textWidth)/2, aGameFrameBuffer.getHeight()/2);
 
+		message = "Scores: " + scores;
+		g.drawString(message, 10, 10);
 	}
 }
