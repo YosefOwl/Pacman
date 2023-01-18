@@ -13,7 +13,6 @@ public class Character {
 	
 
 	public Character(float speed, float x, float y) {
-		
 		this.speed = speed;
 		this.x = x;
 		this.y = y;
