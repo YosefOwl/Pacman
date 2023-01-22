@@ -8,8 +8,8 @@ public class Game extends JFrame {
   
   GameStateMachine stateMachine;
   
-  public Game() {
   
+  public Game() {
     setIgnoreRepaint( true );
     setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 

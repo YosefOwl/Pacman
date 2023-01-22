@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 
 public class Maze extends JPanel{
 	
+	
 	static final int MAZE_ROW = 15;
     static final int MAZE_COL = 26;
     static final float BLOCK_WIDTH = Game.WIDTH / (float)MAZE_COL;

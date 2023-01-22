@@ -1,6 +1,7 @@
 
 public class Coin extends Character{
 
+	
 	static final int VALUE = 1;
 	private boolean eaten;
 	

@@ -1,12 +1,9 @@
 
 public class Pacman extends Character{
 
-	
 	public Pacman(float speed, float x, float y) {
 		super(speed, x, y);
 	}
-
-	
 	
 	public void move(long deltaTime) {
 		

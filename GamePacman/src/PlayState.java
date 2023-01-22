@@ -45,6 +45,7 @@ public class PlayState extends GameState {
 		}
 
 
+		
 		if (aKeyCode == KeyEvent.VK_RIGHT) {
 			pacman.speedX = pacman.speed;
 			pacman.speedY = 0;
