@@ -11,7 +11,6 @@ public class Character {
 	protected float speedX;
 	protected float speedY;
 	
-
 	public Character(float speed, float x, float y) {
 		this.speed = speed;
 		this.x = x;

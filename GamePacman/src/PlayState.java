@@ -52,13 +52,12 @@ public class PlayState extends GameState {
 		}
 
 	}
-
+	
 	public void update(long deltaTime) {
 
 		pacman.move(deltaTime);
 		ghost.move(deltaTime);
 		
-
 //		float px = pacman.getX();
 //		float py = pacman.getY();
 //		float gx = ghost.getX();
