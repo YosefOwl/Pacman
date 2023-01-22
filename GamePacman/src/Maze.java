@@ -10,6 +10,7 @@ public class Maze extends JPanel{
     static final float BLOCK_HEIGHT = Game.HEIGHT / (float)MAZE_ROW;
     private int[][] mazeData;
     
+    
     public Maze() {
     	mazeData = new int[][] {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
