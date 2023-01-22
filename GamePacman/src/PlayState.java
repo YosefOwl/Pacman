@@ -8,19 +8,20 @@ public class PlayState extends GameState {
 	private int scores;
 	private Ghost ghost;
 	private Pacman pacman;
-
+	private Maze maze;
 
 	public PlayState() {
 		ghost = new Ghost(0.1f, 20, 20);
 		pacman = new Pacman(0.1f, 0, 20);
-
+		maze = new Maze();
 		scores = 0;
+		
 	}
 
 	public void enter(Object memento) {
 		active = true;
 	}
-
+	
 	public void processKeyReleased(int aKeyCode) {
 		if (aKeyCode == KeyEvent.VK_ESCAPE)
 			System.exit(0);
@@ -55,7 +56,7 @@ public class PlayState extends GameState {
 
 		pacman.move(deltaTime);
 		ghost.move(deltaTime);
-
+		
 
 //		float px = pacman.getX();
 //		float py = pacman.getY();
@@ -78,19 +79,19 @@ public class PlayState extends GameState {
 	}
 
 	public void render(GameFrameBuffer aGameFrameBuffer) {
-
+		
 		Graphics g = aGameFrameBuffer.graphics();
-
+		maze.render(g);
 		g.setColor(Color.white);
-
+	
 		g.drawOval((int)pacman.getX(), (int)pacman.getY(), pacman.getDimension(), pacman.getDimension());
 
 		g.drawRect((int)ghost.getX(), (int)ghost.getY(), ghost.getDimension(), ghost.getDimension());
-
 		String message = "Scores : " + scores;
 		g.drawString(message, 10, 10);
 
 	}
+
 
 	public Object memento() {
 		return this;

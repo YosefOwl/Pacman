@@ -21,7 +21,6 @@ public class Character {
 		this.speedY = 0.0f;
 	}
 
-
 	public void move(long deltaTime) {
 		
 	}
@@ -68,7 +67,5 @@ public class Character {
 
 	public void setY(float y) {
 		this.y = y;
-	}
-	
-	
+	}	
 }

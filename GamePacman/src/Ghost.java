@@ -1,6 +1,5 @@
 
 
-
 public class Ghost extends Character {
 	
 	public Ghost(float speed, float x, float y) {

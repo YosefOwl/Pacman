@@ -3,7 +3,7 @@ import javax.swing.JFrame;
 
 public class Game extends JFrame {
 
-  static final int WIDTH = 640;
+  static final int WIDTH = 630;
   static final int HEIGHT = 480;
   
   GameStateMachine stateMachine;

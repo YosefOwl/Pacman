@@ -49,7 +49,7 @@ public class GameState extends GameInputEventProcessor {
 			text = "YOU ARE HERE BECAUSE THERE IS NO STATE NAMED " + missingStateName;
 		
 		int textWidth = g.getFontMetrics().stringWidth(text);
-		g.setColor(Color.white);
+		g.setColor(Color.red);
 		g.drawString(text, (aGameFrameBuffer.getWidth()-textWidth)/2, aGameFrameBuffer.getHeight()/2);
 	}
 	

@@ -18,6 +18,7 @@ public class PacmanGame extends Game {
 		app.setTitle( "Pacman Game" );
 		app.setVisible( true );
 		app.run();
+		
 		System.exit( 0 );
 	}
 }
