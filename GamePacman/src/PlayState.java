@@ -9,11 +9,9 @@ public class PlayState extends GameState {
 	private Ghost ghost;
 	private Pacman pacman;
 
-
 	public PlayState() {
 		ghost = new Ghost(0.1f, 20, 20);
 		pacman = new Pacman(0.1f, 0, 20);
-
 		scores = 0;
 	}
 
