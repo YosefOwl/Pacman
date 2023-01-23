@@ -10,6 +10,7 @@ public class PlayState extends GameState {
 	private int scores;
 	private Ghost ghost;
 	private Pacman pacman;
+
 	private Maze maze;
 	private List<Coin> coins;
 
