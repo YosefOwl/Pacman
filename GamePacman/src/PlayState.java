@@ -63,8 +63,7 @@ public class PlayState extends GameState {
 //		float gx = ghost.getX();
 //		float gy = ghost.getX();
 //		int d = pacman.getDimension();
-//
-//
+
 		// check collision
 //		if (px <= gx && py <= gy || px >= gx && py >= gy) {
 //			scores = scores + 10;
@@ -83,15 +82,12 @@ public class PlayState extends GameState {
 		Graphics g = aGameFrameBuffer.graphics();
 		maze.render(g);
 		g.setColor(Color.white);
-	
 		g.drawOval((int)pacman.getX(), (int)pacman.getY(), pacman.getDimension(), pacman.getDimension());
-
 		g.drawRect((int)ghost.getX(), (int)ghost.getY(), ghost.getDimension(), ghost.getDimension());
 		String message = "Scores : " + scores;
 		g.drawString(message, 10, 10);
 
 	}
-
 
 	public Object memento() {
 		return this;

@@ -10,7 +10,6 @@ public class Maze extends JPanel{
     static final float BLOCK_HEIGHT = Game.HEIGHT / (float)MAZE_ROW;
     private int[][] mazeData;
     
-    
     public Maze() {
     	mazeData = new int[][] {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -48,10 +47,10 @@ public class Maze extends JPanel{
 		// String message = "Scores : 3" ;
 		// gBuffer.setColor(Color.pink);
 		// gBuffer.drawString(message, 100, 100);
+		
 	}
 
 	public int[][] getMap() {
 		return mazeData;
 	}
-
 }

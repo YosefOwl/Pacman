@@ -1,5 +1,3 @@
-
-
 public class Ghost extends Character {
 	
 	public Ghost(float speed, float x, float y) {
@@ -8,9 +6,7 @@ public class Ghost extends Character {
 	}
 
 	
-	
 	public void move(long deltaTime) {
-		
 		x = x + speedX*deltaTime;
 		y = y + speedY*deltaTime;
 		
@@ -25,7 +21,7 @@ public class Ghost extends Character {
 			x = Game.WIDTH - 11;
 			speedX = -Math.abs(speedX);
 		}
-			
+		
 		
 		if (y < 0)
 			y = 0;
@@ -33,6 +29,5 @@ public class Ghost extends Character {
 		if (y > Game.HEIGHT - 11)
 			y = Game.HEIGHT - 11;
 	}
-	
 	
 }

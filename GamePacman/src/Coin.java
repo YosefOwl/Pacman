@@ -6,7 +6,6 @@ public class Coin extends Character{
 	
 	public Coin(float speed, float x, float y) {
 		super(speed, x, y); //x=0, y=0
-		
 	}
 	
 	public void setState(boolean state) {

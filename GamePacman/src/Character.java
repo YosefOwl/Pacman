@@ -1,6 +1,5 @@
 
 public class Character {
-	
 	protected float speed;
 	
 	protected float x;
@@ -21,7 +20,6 @@ public class Character {
 	}
 
 	public void move(long deltaTime) {
-		
 	}
 	
 	public int getDimension() {
