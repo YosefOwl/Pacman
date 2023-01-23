@@ -6,10 +6,16 @@ public class Pacman extends Character{
 	}
 	
 	public void move(long deltaTime) {
-		
+
+		float lastx = x;
+		float lasty = y;
 		x = x + speedX*deltaTime;
 		y = y + speedY*deltaTime;
 		
+		if(Maze.collision(this.getDimension() , this.getDimension(), x, y)==false) {
+			x=lastx;
+			y=lasty;
+		}
 		
 		if (x < 0)
 			x = 0;

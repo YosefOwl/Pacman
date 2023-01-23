@@ -15,7 +15,7 @@ public class Character {
 		this.speed = speed;
 		this.x = x;
 		this.y = y;
-		this.dimension = 20;
+		this.dimension = 19;
 		this.speedX = 0.0f;
 		this.speedY = 0.0f;
 	}
@@ -27,6 +27,10 @@ public class Character {
 		return dimension;
 	}
 
+	public int setDimension(int dim) {
+		return this.dimension = dim;
+	}
+	
 	public float getX() {
 		return x;
 	}
@@ -66,4 +70,5 @@ public class Character {
 	public void setY(float y) {
 		this.y = y;
 	}	
+	
 }
