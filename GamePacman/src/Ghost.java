@@ -10,7 +10,6 @@ public class Ghost extends Character {
 		x = x + speedX*deltaTime;
 		y = y + speedY*deltaTime;
 		
-		
 		if (x < 0) {
 			x = 0;
 			speedX = Math.abs(speedX);

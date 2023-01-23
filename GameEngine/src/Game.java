@@ -29,7 +29,6 @@ public class Game extends JFrame {
     
     addKeyListener( GameInput.instance() );
     canvas.addKeyListener(  GameInput.instance() );
-    
   }
         
   public void run() {

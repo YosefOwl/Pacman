@@ -1,5 +1,6 @@
 
 public class Character {
+	
 	protected float speed;
 	
 	protected float x;

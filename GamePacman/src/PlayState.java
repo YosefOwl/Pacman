@@ -86,7 +86,6 @@ public class PlayState extends GameState {
 		g.drawRect((int)ghost.getX(), (int)ghost.getY(), ghost.getDimension(), ghost.getDimension());
 		String message = "Scores : " + scores;
 		g.drawString(message, 10, 10);
-
 	}
 
 	public Object memento() {

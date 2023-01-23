@@ -28,6 +28,7 @@ public class Maze extends JPanel{
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
         };
     }
+    
  
 	public void render(Graphics g) {
 		int[][] maze = getMap();
