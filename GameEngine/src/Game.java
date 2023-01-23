@@ -3,13 +3,12 @@ import javax.swing.JFrame;
 
 public class Game extends JFrame {
 
-  static final int WIDTH = 640;
+  static final int WIDTH = 625;
   static final int HEIGHT = 480;
   
   GameStateMachine stateMachine;
   
   public Game() {
-  
     setIgnoreRepaint( true );
     setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
@@ -30,7 +29,6 @@ public class Game extends JFrame {
     
     addKeyListener( GameInput.instance() );
     canvas.addKeyListener(  GameInput.instance() );
-    
   }
         
   public void run() {
