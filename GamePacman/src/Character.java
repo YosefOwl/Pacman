@@ -1,28 +1,24 @@
 
-public class Character {
+public class Character implements CharacterBehave {
 	
 	protected float speed;
-	
 	protected float x;
 	protected float y;
-	
 	protected int dimension;
-	
 	protected float speedX;
 	protected float speedY;
-	
-	public Character(float speed, float x, float y) {
+
+
+	// TODO speed not necessary here, is relevant just for pacman and ghost
+	public Character(float speed, float x, float y, int dimension) {
 		this.speed = speed;
 		this.x = x;
 		this.y = y;
-		this.dimension = 19;
+		this.dimension = dimension;
 		this.speedX = 0.0f;
 		this.speedY = 0.0f;
 	}
 
-	public void move(long deltaTime) {
-	}
-	
 	public int getDimension() {
 		return dimension;
 	}
@@ -69,6 +65,32 @@ public class Character {
 
 	public void setY(float y) {
 		this.y = y;
-	}	
-	
+	}
+
+	@Override
+	public void move(long deltaTime) {
+
+	}
+
+	@Override
+	public void changeDirection(int direction) {
+
+		if (direction == GameData.RIGHT){
+			speedX = speed;
+			speedY = 0;
+		}
+		else if (direction == GameData.LEFT){
+			speedX = -speed;
+			speedY = 0;
+		}
+		else if (direction == GameData.UP){
+			speedY = -speed;
+			speedX = 0;
+		}
+		else if (direction == GameData.DOWN){
+			speedY = speed;
+			speedX = 0;
+		}
+	}
+
 }

@@ -1,5 +1,4 @@
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.Vector;
@@ -7,35 +6,9 @@ import java.util.Vector;
 public class PlayState extends GameState {
 
 	private boolean active;
-	private int scores;
-	private Ghost ghost;
-	private Pacman pacman;
-
-	private Maze maze;
-	private List<Coin> coins;
-
+	private GameData data;
 	public PlayState() {
-		ghost = new Ghost(0.1f, 20, 20);
-		pacman = new Pacman(0.1f, 26, 35);
-		maze = new Maze();
-		coins = new Vector<Coin>();
-		drawCoins();
-		scores = 0;
-		
-	}
-
-	private void drawCoins() {
-		int[][] m = maze.getMap();
-		float xCoin, yCoin;
-		for(int row=0; row < m.length; row++) {
-			for(int col =0; col < m[row].length; col++) {
-				if(m[row][col]==0) {
-					xCoin = (col * maze.BLOCK_WIDTH) + (maze.BLOCK_WIDTH / 2) - (Coin.DIMENSION / 1f);
-					yCoin = (row * maze.BLOCK_HEIGHT)  + (maze.BLOCK_HEIGHT / 2) - (Coin.DIMENSION / 1f);
-					coins.add(new Coin(0, xCoin, yCoin));
-				}
-			}
-		}
+		data = GameData.getInstance();
 	}
 
 	public void enter(Object memento) {
@@ -43,55 +16,40 @@ public class PlayState extends GameState {
 	}
 	
 	public void processKeyReleased(int aKeyCode) {
+
 		if (aKeyCode == KeyEvent.VK_ESCAPE)
 			System.exit(0);
 
 		if (aKeyCode == KeyEvent.VK_Q)
 			active = false;
 
-		if (aKeyCode == KeyEvent.VK_UP){
-			pacman.speedY = -pacman.speed;
-			pacman.speedX = 0;
-		}
+		if (aKeyCode == KeyEvent.VK_UP)
+			data.getPacman().changeDirection(GameData.UP);
 
-		if (aKeyCode == KeyEvent.VK_DOWN) {
-			pacman.speedY = pacman.speed;
-			pacman.speedX = 0;
-		}
+		if (aKeyCode == KeyEvent.VK_DOWN)
+			data.getPacman().changeDirection(GameData.DOWN);
 
-		if (aKeyCode == KeyEvent.VK_LEFT) {
-			pacman.speedX = -pacman.speed;
-			pacman.speedY = 0;
-		}
+		if (aKeyCode == KeyEvent.VK_LEFT)
+			data.getPacman().changeDirection(GameData.LEFT);
 
-
-		
-		if (aKeyCode == KeyEvent.VK_RIGHT) {
-			pacman.speedX = pacman.speed;
-			pacman.speedY = 0;
-		}
+		if (aKeyCode == KeyEvent.VK_RIGHT)
+			data.getPacman().changeDirection(GameData.RIGHT);
 
 	}
 	
 	public void update(long deltaTime) {
 
-		pacman.move(deltaTime);
-		ghost.move(deltaTime);
-		
-//		float px = pacman.getX();
-//		float py = pacman.getY();
-//		float gx = ghost.getX();
-//		float gy = ghost.getX();
-//		int d = pacman.getDimension();
+		data.getPacman().move(deltaTime);
 
-		// check collision
-//		if (px <= gx && py <= gy || px >= gx && py >= gy) {
-//			scores = scores + 10;
-
+		for(int i = 0; i < data.getGhostList().size(); i++) {
+			data.getGhost(i).move(deltaTime);
+		}
 
 	}
 
-	public boolean isActive() { return active; }
+	public boolean isActive() {
+			return active;
+	}
 
 	public String next() {
 		return "Result";
@@ -100,35 +58,85 @@ public class PlayState extends GameState {
 	public void render(GameFrameBuffer aGameFrameBuffer) {
 		
 		Graphics g = aGameFrameBuffer.graphics();
-		maze.render(g);
-		putCoins(g);
+		data.getMaze().render(g);
+
+		drawCoins(g);
 		drawPacman(g);
-	//	g.setColor(Color.white);
-	//	g.drawOval((int)pacman.getX(), (int)pacman.getY(), pacman.getDimension(), pacman.getDimension());
-	//	g.drawRect((int)ghost.getX(), (int)ghost.getY(), ghost.getDimension(), ghost.getDimension());
-	//	String message = "Scores : " + scores;
-	//	g.drawString(message, 10, 10);
+		drawGhosts(g);
+		drawStatusBar(g);
 	}
 
+	// TODO may need to move to GameData class or Pacman class
 	private void drawPacman(Graphics g) {
+
 		g.setColor(Color.YELLOW);
-		g.drawOval((int)pacman.getX(), (int)pacman.getY(), pacman.getDimension(), pacman.getDimension());
-		g.fillOval((int)pacman.getX(), (int)pacman.getY(), pacman.getDimension(), pacman.getDimension());
+
+		int x , y, d;
+		x = (int)data.getPacman().getX();
+		y = (int)data.getPacman().getY();
+		d = data.getPacman().getDimension();
+
+		g.drawOval(x, y, d, d);
+		g.fillOval(x, y, d, d);
 	}
 
-	private void putCoins(Graphics g) {
+
+	// TODO may need to move to GameData class or Pacman class
+	private void drawCoins(Graphics g) {
 		g.setColor(Color.PINK);
-		for(int i=0; i<coins.size(); i++) {
-			g.drawOval((int)coins.get(i).getX(), (int)coins.get(i).getY(), coins.get(i).dimension, coins.get(i).dimension);
-			g.fillOval((int)coins.get(i).getX(), (int)coins.get(i).getY(), coins.get(i).dimension, coins.get(i).dimension);
-		}		
+
+		for(int i = 0; i < data.getCoins().size(); i++) {
+
+			int x , y, d;
+			x = (int)data.getCoin(i).getX();
+			y = (int)data.getCoin(i).getY();
+			d = data.getCoin(i).getDimension();
+
+			g.drawOval(x, y, d, d);
+			g.fillOval(x, y, d, d);
+		}
+
+	}
+	// TODO may need to move to GameData class or Pacman class
+
+	public void drawGhosts(Graphics g) {
+		g.setColor(Color.GREEN);
+
+		for(int i = 0; i < data.getGhostList().size(); i++) {
+
+			int x , y, d;
+
+			x = (int)data.getGhost(i).getX();
+			y = (int)data.getGhost(i).getY();
+			d = data.getGhost(i).getDimension();
+
+			g.drawRect(x, y, d, d);
+			g.fillRect(x, y, d, d);
+		}
+	}
+
+	public void drawStatusBar(Graphics g) {
+		g.setColor(Color.RED);
+
+		String scoreTxt = "SCORES:  " + data.getScore();
+		String levelTxt = "LEVEL:  " + data.getGameLevel();
+		String lifeTxt = "LIFE:  " + data.getGameLife();
+
+		int scoreTxtWidth = g.getFontMetrics().stringWidth(scoreTxt);
+		int lifeTxtWidth = g.getFontMetrics().stringWidth(lifeTxt);
+		//int scoreTxtWidth = g.getFontMetrics().stringWidth(scoreTxt);
+
+		g.setFont(new Font("Serif", Font.BOLD, 28) );
+
+		g.drawString(levelTxt, (Game.WIDTH/Maze.MAZE_COL) , 515);
+		g.drawString(scoreTxt, (Game.WIDTH/2) -scoreTxtWidth , 515);
+
+		g.drawString(lifeTxt, (int)Maze.BLOCK_WIDTH*Maze.MAZE_COL - lifeTxtWidth*3 , 515);
+
 	}
 
 	public Object memento() {
 		return this;
 	}
 
-	public int getScores() {
-		return scores;
-	}
 }

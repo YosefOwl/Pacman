@@ -6,7 +6,6 @@ public class WelcomeState extends GameState {
 
 	private boolean active;
 
-
 	public void enter(Object memento) {
 		active = true;
 	}

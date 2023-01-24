@@ -29,7 +29,7 @@ public class Maze extends JPanel {
 	}
 
 	public void render(Graphics g) {
-		int[][] maze = getMap();
+
 		for (int row = 0; row < mazeData.length; row++) {
 			for (int col = 0; col < mazeData[row].length; col++) {
 				if (mazeData[row][col] == 1) {
@@ -42,13 +42,6 @@ public class Maze extends JPanel {
 				}
 			}
 		}
-
-		// gBuffer.setColor(Color.yellow);
-		// gBuffer.drawOval(50, 50, 20, 20);
-		// String message = "Scores : 3" ;
-		// gBuffer.setColor(Color.pink);
-		// gBuffer.drawString(message, 100, 100);
-
 	}
 
 	public static boolean collision(int w, int h, float x, float y) {
