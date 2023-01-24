@@ -4,7 +4,6 @@ import java.util.Arrays;
 import javax.swing.JPanel;
 
 public class Maze extends JPanel {
-
 	static final int MAZE_ROW = 15;
 	static final int MAZE_COL = 26;
 	static final float BLOCK_WIDTH = Game.WIDTH / (float) MAZE_COL;
@@ -35,7 +34,7 @@ public class Maze extends JPanel {
 						{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
 				};
 
-		this.mazeData = new MazeData[mazeSketch.length][];
+		this.mazeData = new MazeData[mazeSketch.length][mazeSketch[0].length];
 
 		for (int i = 0; i < mazeSketch.length; i++) {
 			for (int j = 0; j < mazeSketch[i].length; j++) {
@@ -44,7 +43,12 @@ public class Maze extends JPanel {
 				if (mazeSketch[i][j] == 1) {
 					this.mazeData[i][j].setColor(Color.BLACK);
 				} else {
-					this.mazeData[i][j].setColor(Color.BLACK);
+					this.mazeData[i][j].setColor(Color.WHITE);
+					float xCoin = (i * BLOCK_WIDTH) + (BLOCK_WIDTH / 2) - (Coin.DIMENSION / 1f);
+					float yCoin = (j * BLOCK_HEIGHT)  + (BLOCK_HEIGHT / 2) - (Coin.DIMENSION / 1f);
+					Coin coin = new Coin(0, xCoin, yCoin);
+					this.mazeData[i][j].getCharacters().add(coin);
+
 				}
 			}
 		}
@@ -61,9 +65,24 @@ public class Maze extends JPanel {
 					g.setColor(Color.WHITE);
 					g.drawRect(col * (int) (BLOCK_WIDTH), row * (int) (BLOCK_HEIGHT), (int) (BLOCK_WIDTH),
 							(int) (BLOCK_HEIGHT));
+
+					var optionalCoin = mazeData[row][col]
+							.getCharacters()
+							.stream()
+							.filter(c -> c.isActive() && c.getStereotip().equals(Stereotip.eCoin))
+							.findFirst();
+					if(!optionalCoin.isEmpty())
+					{
+						var coin = optionalCoin.get();
+
+						g.setColor(Color.PINK);
+						g.drawOval((int)coin.getX(),(int)coin.getY(), coin.dimension, coin.dimension);
+						g.fillOval((int)coin.getX(), (int)coin.getY(), coin.dimension, coin.dimension);
+					}
 				}
 			}
 		}
+	}
 
 		// gBuffer.setColor(Color.yellow);
 		// gBuffer.drawOval(50, 50, 20, 20);
@@ -71,7 +90,6 @@ public class Maze extends JPanel {
 		// gBuffer.setColor(Color.pink);
 		// gBuffer.drawString(message, 100, 100);
 
-	}
 
 	public static boolean collision(int w, int h, float x, float y) {
 		int leftRowTop = (int) (y / BLOCK_HEIGHT);
@@ -93,5 +111,22 @@ public class Maze extends JPanel {
 
 	public MazeData[][] getMap() {
 		return mazeData;
+	}
+
+	public void setCharacterInPosition(Character character){
+		int x = character.getPosition().x%15;
+		int y = character.getPosition().y%26;
+
+		try{
+			if(!mazeData[x][y].getCharacters().contains(character))
+			{
+				mazeData[x][y]
+						.getCharacters()
+						.add(character);
+			}
+
+		}catch (Exception e){
+			System.out.println(e.getMessage());
+		}
 	}
 }

@@ -1,3 +1,4 @@
+import java.awt.*;
 
 public class Coin extends Character{
 
@@ -8,8 +9,34 @@ public class Coin extends Character{
 	public Coin(float speed, float x, float y) {
 		super(speed, x, y); //x=0, y=0
 		setDimension(DIMENSION);
+		setActive(true);
+		setStereotip(Stereotip.eCoin);
 	}
-	
+
+	@Override
+	public void onCollisionEnter(ICollisional other) {
+		if(other.getCharacter().getStereotip().equals(Stereotip.ePacman))
+		{
+			this.setActive(false);
+		}
+
+	}
+
+	@Override
+	public Character getCharacter() {
+		return this;
+	}
+
+	@Override
+	public Shape getCollider() {
+		return null;
+	}
+
+	@Override
+	public Point getPosition() {
+		return null;
+	}
+
 	public void setState(boolean state) {
 		this.eaten = state;
 	}

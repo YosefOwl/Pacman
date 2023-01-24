@@ -12,15 +12,19 @@ public class PlayState extends GameState {
 	private Pacman pacman;
 	private Maze maze;
 	private List<Coin> coins;
+	private CollisionDetector collisionDetector;
 
 	public PlayState() {
 		ghost = new Ghost(0.1f, 20, 20);
 		pacman = new Pacman(0.1f, 26, 35);
+		pacman.setActive(true);
+		pacman.setStereotip(Stereotip.ePacman);
 		maze = new Maze();
 		coins = new Vector<Coin>();
-		drawCoins();
 		scores = 0;
-		
+		collisionDetector = new CollisionDetector(maze);
+		//drawCoins();
+
 	}
 
 	private void drawCoins() {
@@ -28,8 +32,9 @@ public class PlayState extends GameState {
 		float xCoin, yCoin;
 		for(int row=0; row < m.length; row++) {
 			for(int col =0; col < m[row].length; col++) {
-				if(m[row][col].getCharacters()
-						.stream().anyMatch(c -> c.getStereotip().equals(Stereotip.eCoin))) {
+				if(m[row][col].getColor().equals(Color.BLACK) &&
+						m[row][col].getCharacters()
+						.stream().anyMatch(c -> c.getStereotip().equals(Stereotip.eCoin) && c.isActive)) {
 					xCoin = (col * maze.BLOCK_WIDTH) + (maze.BLOCK_WIDTH / 2) - (Coin.DIMENSION / 1f);
 					yCoin = (row * maze.BLOCK_HEIGHT)  + (maze.BLOCK_HEIGHT / 2) - (Coin.DIMENSION / 1f);
 					coins.add(new Coin(0, xCoin, yCoin));
@@ -75,20 +80,12 @@ public class PlayState extends GameState {
 	
 	public void update(long deltaTime) {
 
+		var collisions = collisionDetector.DetectCollisions();
+		collisionDetector.ExecuteOnCollisionEnters(collisions);
 		pacman.move(deltaTime);
 		ghost.move(deltaTime);
-		
-//		float px = pacman.getX();
-//		float py = pacman.getY();
-//		float gx = ghost.getX();
-//		float gy = ghost.getX();
-//		int d = pacman.getDimension();
-
-		// check collision
-//		if (px <= gx && py <= gy || px >= gx && py >= gy) {
-//			scores = scores + 10;
-
-
+		maze.setCharacterInPosition(pacman);
+		//maze.setCharacterInPosition(ghost);
 	}
 
 	public boolean isActive() { return active; }
@@ -101,13 +98,13 @@ public class PlayState extends GameState {
 		
 		Graphics g = aGameFrameBuffer.graphics();
 		maze.render(g);
-		putCoins(g);
 		drawPacman(g);
-	//	g.setColor(Color.white);
-	//	g.drawOval((int)pacman.getX(), (int)pacman.getY(), pacman.getDimension(), pacman.getDimension());
-	//	g.drawRect((int)ghost.getX(), (int)ghost.getY(), ghost.getDimension(), ghost.getDimension());
-	//	String message = "Scores : " + scores;
-	//	g.drawString(message, 10, 10);
+		//putCoins(g);
+		//	g.setColor(Color.white);
+		//	g.drawOval((int)pacman.getX(), (int)pacman.getY(), pacman.getDimension(), pacman.getDimension());
+		//	g.drawRect((int)ghost.getX(), (int)ghost.getY(), ghost.getDimension(), ghost.getDimension());
+		//	String message = "Scores : " + scores;
+		//	g.drawString(message, 10, 10);
 	}
 
 	private void drawPacman(Graphics g) {

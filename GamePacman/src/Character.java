@@ -1,23 +1,13 @@
 import java.awt.*;
 
-public class Character implements ICollisional {
+public abstract class Character implements ICollisional {
 	
 	protected float speed;
-	
 	protected float x;
 	protected float y;
-
-	public Stereotip getStereotip() {
-		return stereotip;
-	}
-
-	public void setStereotip(Stereotip stereotip) {
-		this.stereotip = stereotip;
-	}
-
+	protected boolean isActive;
 	protected Stereotip stereotip;
 	protected int dimension;
-	
 	protected float speedX;
 	protected float speedY;
 	
@@ -32,7 +22,22 @@ public class Character implements ICollisional {
 
 	public void move(long deltaTime) {
 	}
-	
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean active) {
+		isActive = active;
+	}
+
+	public Stereotip getStereotip() {
+		return stereotip;
+	}
+
+	public void setStereotip(Stereotip stereotip) {
+		this.stereotip = stereotip;
+	}
 	public int getDimension() {
 		return dimension;
 	}
@@ -82,17 +87,11 @@ public class Character implements ICollisional {
 	}
 
 	@Override
-	public void OnCollisionEnter(ICollisional other) {
-
-	}
+	public abstract void onCollisionEnter(ICollisional other);
 
 	@Override
-	public Shape GetCollider() {
-		return null;
-	}
+	public abstract Shape getCollider();
 
 	@Override
-	public Point GetPosition() {
-		return null;
-	}
+	public abstract Point getPosition();
 }

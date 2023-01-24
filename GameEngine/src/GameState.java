@@ -3,7 +3,6 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 public class GameState extends GameInputEventProcessor {
-
 	private String missingStateName;
 
 	public void input() {
