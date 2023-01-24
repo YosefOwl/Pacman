@@ -1,11 +1,21 @@
+import java.awt.*;
 
-public class Character {
+public class Character implements ICollisional {
 	
 	protected float speed;
 	
 	protected float x;
 	protected float y;
-	
+
+	public Stereotip getStereotip() {
+		return stereotip;
+	}
+
+	public void setStereotip(Stereotip stereotip) {
+		this.stereotip = stereotip;
+	}
+
+	protected Stereotip stereotip;
 	protected int dimension;
 	
 	protected float speedX;
@@ -69,6 +79,20 @@ public class Character {
 
 	public void setY(float y) {
 		this.y = y;
-	}	
-	
+	}
+
+	@Override
+	public void OnCollisionEnter(ICollisional other) {
+
+	}
+
+	@Override
+	public Shape GetCollider() {
+		return null;
+	}
+
+	@Override
+	public Point GetPosition() {
+		return null;
+	}
 }

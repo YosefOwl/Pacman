@@ -1,4 +1,5 @@
 
+
 public class Pacman extends Character{
 
 	public Pacman(float speed, float x, float y) {

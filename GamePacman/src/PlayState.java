@@ -10,7 +10,6 @@ public class PlayState extends GameState {
 	private int scores;
 	private Ghost ghost;
 	private Pacman pacman;
-
 	private Maze maze;
 	private List<Coin> coins;
 
@@ -25,11 +24,12 @@ public class PlayState extends GameState {
 	}
 
 	private void drawCoins() {
-		int[][] m = maze.getMap();
+		var m = maze.getMap();
 		float xCoin, yCoin;
 		for(int row=0; row < m.length; row++) {
 			for(int col =0; col < m[row].length; col++) {
-				if(m[row][col]==0) {
+				if(m[row][col].getCharacters()
+						.stream().anyMatch(c -> c.getStereotip().equals(Stereotip.eCoin))) {
 					xCoin = (col * maze.BLOCK_WIDTH) + (maze.BLOCK_WIDTH / 2) - (Coin.DIMENSION / 1f);
 					yCoin = (row * maze.BLOCK_HEIGHT)  + (maze.BLOCK_HEIGHT / 2) - (Coin.DIMENSION / 1f);
 					coins.add(new Coin(0, xCoin, yCoin));

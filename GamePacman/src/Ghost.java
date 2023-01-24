@@ -5,7 +5,6 @@ public class Ghost extends Character {
 		this.speedX = speed;
 	}
 
-	
 	public void move(long deltaTime) {
 		x = x + speedX*deltaTime;
 		y = y + speedY*deltaTime;
