@@ -1,32 +1,34 @@
 
-public class Pacman extends Character{
+public class Pacman extends Character {
 
-	public Pacman(float speed, float x, float y) {
-		super(speed, x, y);
+	public Pacman(float speed, float x, float y, int dimension) {
+		super(speed, x, y, dimension);
 	}
-	
+
+	@Override
 	public void move(long deltaTime) {
 
-		float lastx = x;
-		float lasty = y;
+		float lastX = x;
+		float lastY = y;
 		x = x + speedX*deltaTime;
 		y = y + speedY*deltaTime;
 		
-		if(Maze.collision(this.getDimension() , this.getDimension(), x, y)==false) {
-			x=lastx;
-			y=lasty;
+		if(Maze.collision(this.getDimension() , this.getDimension(), x, y) == false) {
+			y = lastY;
+			x = lastX;
 		}
 		
 		if (x < 0)
 			x = 0;
-		
-		if (x > Game.WIDTH - 11)
-			x = Game.WIDTH - 11;
-		
+
+		if (x > Game.WIDTH - dimension)
+			x = Game.WIDTH - dimension;
+
 		if (y < 0)
 			y = 0;
-		
-		if (y > Game.HEIGHT - 11)
-			y = Game.HEIGHT - 11;
+
+		if (y > Game.HEIGHT - dimension)
+			y = Game.HEIGHT - dimension;
 	}
+
 }
