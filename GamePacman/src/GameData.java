@@ -42,10 +42,9 @@ public class GameData {
         ghostNum = NUMBER_OF_GHOST;
         ghostCollision = 0;
         gameLevel = 0;
-        pacman = new Pacman(DEFAULT_SPEED, PACMAN_X, PACMAN_Y, PACMAN_D);
+        pacman = new Pacman(DEFAULT_SPEED, PACMAN_X, PACMAN_Y);
         maze = new Maze();
         coins = new Vector<Coin>();
-        putCoins();
         initGhosts();
     }
 
@@ -54,26 +53,6 @@ public class GameData {
         if (gameDataInstance == null)
             gameDataInstance = new GameData();
         return gameDataInstance;
-    }
-
-    private void putCoins() {
-
-        int[][] m = maze.getMap();
-        float xCoin, yCoin;
-
-        for(int row = 0; row < m.length; row++) {
-
-            for(int col = 0; col < m[row].length; col++) {
-
-                if(m[row][col] == 0) {
-
-                    xCoin = (col * maze.BLOCK_WIDTH) + (maze.BLOCK_WIDTH / 2) - (Coin.DIMENSION / 1f);
-                    yCoin = (row * maze.BLOCK_HEIGHT)  + (maze.BLOCK_HEIGHT / 2) - (Coin.DIMENSION / 1f);
-                    coins.add(new Coin(0, xCoin, yCoin));
-
-                }
-            }
-        }
     }
 
     public int getGameLevel() {
@@ -163,9 +142,9 @@ public class GameData {
 
             // add 3 CrazyGhost and 3 Ghost
             if (i > 2)
-                ghostList.add(new CrazyGhost(DEFAULT_SPEED, x, y, GHOST_D));
+                ghostList.add(new CrazyGhost(DEFAULT_SPEED, x, y));
             else
-                ghostList.add(new Ghost(DEFAULT_SPEED, x, y, GHOST_D));
+                ghostList.add(new Ghost(DEFAULT_SPEED, x, y));
 
             x += Maze.BLOCK_WIDTH;
         }
@@ -185,7 +164,7 @@ public class GameData {
         if (index < ghostList.size())
             return ghostList.get(index);
 
-        Ghost emptyGhost = new Ghost(0, 0, 0, 0);
+        Ghost emptyGhost = new Ghost(0, 0, 0);
         return emptyGhost;
     }
 }

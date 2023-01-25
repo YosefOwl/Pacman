@@ -61,6 +61,7 @@ public class PlayState extends GameState {
 					if(ghost.isActive){
 						ghost.move(deltaTime);
 					}
+					return null;
 				});
 	}
 
@@ -86,13 +87,6 @@ public class PlayState extends GameState {
 		g.fillOval((int)pacman.getX(), (int)pacman.getY(), pacman.getDimension(), pacman.getDimension());
 	}
 
-	private void putCoins(Graphics g) {
-		g.setColor(Color.PINK);
-		for(int i=0; i<maze.coins.size(); i++) {
-			g.drawOval((int)coins.get(i).getX(), (int)coins.get(i).getY(), coins.get(i).dimension, coins.get(i).dimension);
-			g.fillOval((int)coins.get(i).getX(), (int)coins.get(i).getY(), coins.get(i).dimension, coins.get(i).dimension);
-		}		
-	}
 	// TODO may need to move to GameData class or Pacman class
 
 	public void drawGhosts(Graphics g) {
