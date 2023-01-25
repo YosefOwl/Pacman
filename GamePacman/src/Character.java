@@ -1,24 +1,38 @@
+import java.awt.*;
 
-public class Character implements CharacterBehave {
+public class Character implements ICollisional {
 	
 	protected float speed;
+	
 	protected float x;
 	protected float y;
+
+	public Stereotip getStereotip() {
+		return stereotip;
+	}
+
+	public void setStereotip(Stereotip stereotip) {
+		this.stereotip = stereotip;
+	}
+
+	protected Stereotip stereotip;
 	protected int dimension;
+	
 	protected float speedX;
 	protected float speedY;
-
-
-	// TODO speed not necessary here, is relevant just for pacman and ghost
-	public Character(float speed, float x, float y, int dimension) {
+	
+	public Character(float speed, float x, float y) {
 		this.speed = speed;
 		this.x = x;
 		this.y = y;
-		this.dimension = dimension;
+		this.dimension = 19;
 		this.speedX = 0.0f;
 		this.speedY = 0.0f;
 	}
 
+	public void move(long deltaTime) {
+	}
+	
 	public int getDimension() {
 		return dimension;
 	}
@@ -68,29 +82,17 @@ public class Character implements CharacterBehave {
 	}
 
 	@Override
-	public void move(long deltaTime) {
+	public void OnCollisionEnter(ICollisional other) {
 
 	}
 
 	@Override
-	public void changeDirection(int direction) {
-
-		if (direction == GameData.RIGHT){
-			speedX = speed;
-			speedY = 0;
-		}
-		else if (direction == GameData.LEFT){
-			speedX = -speed;
-			speedY = 0;
-		}
-		else if (direction == GameData.UP){
-			speedY = -speed;
-			speedX = 0;
-		}
-		else if (direction == GameData.DOWN){
-			speedY = speed;
-			speedX = 0;
-		}
+	public Shape GetCollider() {
+		return null;
 	}
 
+	@Override
+	public Point GetPosition() {
+		return null;
+	}
 }
