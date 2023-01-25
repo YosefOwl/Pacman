@@ -80,12 +80,13 @@ public class PlayState extends GameState {
 	
 	public void update(long deltaTime) {
 
-		var collisions = collisionDetector.DetectCollisions();
-		collisionDetector.ExecuteOnCollisionEnters(collisions);
 		pacman.move(deltaTime);
 		ghost.move(deltaTime);
 		maze.setCharacterInPosition(pacman);
 		//maze.setCharacterInPosition(ghost);
+		var collisions = collisionDetector.DetectCollisions();
+		collisionDetector.ExecuteOnCollisionEnters(collisions);
+
 	}
 
 	public boolean isActive() { return active; }

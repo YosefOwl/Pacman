@@ -34,7 +34,10 @@ public class Coin extends Character{
 
 	@Override
 	public Point getPosition() {
-		return null;
+		//return new Point((int)x%15,(int)y%26);
+		return new Point((int)x,(int)y);
+
+
 	}
 
 	public void setState(boolean state) {

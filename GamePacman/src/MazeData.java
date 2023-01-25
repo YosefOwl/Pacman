@@ -6,6 +6,15 @@ public class MazeData {
     private ArrayList<Character> characters = new ArrayList<>();
     private Color color;
     private boolean isWall;
+
+    public boolean isWall() {
+        return isWall;
+    }
+
+    public void setWall(boolean wall) {
+        isWall = wall;
+    }
+
     public ArrayList<Character> getCharacters() {
         return characters;
     }

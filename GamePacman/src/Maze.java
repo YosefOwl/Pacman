@@ -41,14 +41,12 @@ public class Maze extends JPanel {
 
 				this.mazeData[i][j] = new MazeData();
 				if (mazeSketch[i][j] == 1) {
-					this.mazeData[i][j].setColor(Color.BLACK);
-				} else {
-					this.mazeData[i][j].setColor(Color.WHITE);
-					float xCoin = (i * BLOCK_WIDTH) + (BLOCK_WIDTH / 2) - (Coin.DIMENSION / 1f);
-					float yCoin = (j * BLOCK_HEIGHT)  + (BLOCK_HEIGHT / 2) - (Coin.DIMENSION / 1f);
+					this.mazeData[i][j].setWall(true);
+				}else {
+					float yCoin = (i * BLOCK_HEIGHT) + (BLOCK_HEIGHT / 2) - (Coin.DIMENSION / 1f);
+					float xCoin = (j * BLOCK_WIDTH)  + (BLOCK_WIDTH / 2) - (Coin.DIMENSION / 1f);
 					Coin coin = new Coin(0, xCoin, yCoin);
 					this.mazeData[i][j].getCharacters().add(coin);
-
 				}
 			}
 		}
@@ -58,14 +56,15 @@ public class Maze extends JPanel {
 		var maze = getMap();
 		for (int row = 0; row < mazeData.length; row++) {
 			for (int col = 0; col < mazeData[row].length; col++) {
-				if (mazeData[row][col].getColor().equals(Color.BLACK)) {
+				if (mazeData[row][col].isWall()) {
 					g.setColor(Color.BLACK);
 					g.fillRect(col * (int) (BLOCK_WIDTH), row * (int) (BLOCK_HEIGHT), (int) (BLOCK_WIDTH),
 							(int) (BLOCK_HEIGHT));
 					g.setColor(Color.WHITE);
 					g.drawRect(col * (int) (BLOCK_WIDTH), row * (int) (BLOCK_HEIGHT), (int) (BLOCK_WIDTH),
 							(int) (BLOCK_HEIGHT));
-
+				}
+				else {
 					var optionalCoin = mazeData[row][col]
 							.getCharacters()
 							.stream()
@@ -74,39 +73,14 @@ public class Maze extends JPanel {
 					if(!optionalCoin.isEmpty())
 					{
 						var coin = optionalCoin.get();
-
 						g.setColor(Color.PINK);
-						g.drawOval((int)coin.getX(),(int)coin.getY(), coin.dimension, coin.dimension);
-						g.fillOval((int)coin.getX(), (int)coin.getY(), coin.dimension, coin.dimension);
+						g.drawOval(coin.getPosition().x,coin.getPosition().y, coin.dimension, coin.dimension);
+						g.fillOval(coin.getPosition().x,coin.getPosition().y, coin.dimension, coin.dimension);
 					}
+
 				}
 			}
 		}
-	}
-
-		// gBuffer.setColor(Color.yellow);
-		// gBuffer.drawOval(50, 50, 20, 20);
-		// String message = "Scores : 3" ;
-		// gBuffer.setColor(Color.pink);
-		// gBuffer.drawString(message, 100, 100);
-
-
-	public static boolean collision(int w, int h, float x, float y) {
-		int leftRowTop = (int) (y / BLOCK_HEIGHT);
-		int leftColTop = (int) (x / BLOCK_WIDTH);
-		int leftRowBottom = (int) (((y + h)) / BLOCK_HEIGHT);
-		int leftColBottom = (int) (x / BLOCK_WIDTH);
-		int rightRowTop = (int) (y / BLOCK_HEIGHT);
-		int rightColTop = (int) ((x + w) / BLOCK_WIDTH);
-		int rightRowBottom = (int) (((y + h)) / BLOCK_HEIGHT);
-		int rightColBottom = (int) ((x + w) / BLOCK_WIDTH);
-//		int[][] m = getMap();
-//		if (m[leftRowBottom][leftColBottom] == 0 && m[rightRowBottom][rightColBottom] == 0
-//				&& m[leftRowTop][leftColTop] == 0 && m[rightRowTop][rightColTop] == 0)
-//			return true;
-//		else
-//			return false;
-		return true;
 	}
 
 	public MazeData[][] getMap() {
@@ -114,19 +88,15 @@ public class Maze extends JPanel {
 	}
 
 	public void setCharacterInPosition(Character character){
-		int x = character.getPosition().x%15;
-		int y = character.getPosition().y%26;
 
-		try{
-			if(!mazeData[x][y].getCharacters().contains(character))
-			{
-				mazeData[x][y]
-						.getCharacters()
-						.add(character);
-			}
+		int col = character.getPosition().x / ((int)BLOCK_WIDTH);
+		int row = character.getPosition().y / ((int)BLOCK_HEIGHT);
 
-		}catch (Exception e){
-			System.out.println(e.getMessage());
+		if(!mazeData[row][col].getCharacters().contains(character)) {
+			mazeData[row][col]
+					.getCharacters()
+					.add(character);
 		}
+
 	}
 }

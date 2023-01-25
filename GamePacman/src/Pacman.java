@@ -42,7 +42,6 @@ public class Pacman extends Character{
 			if(other.getCharacter().getStereotip().equals(Stereotip.eCoin))
 			{
 				coins.add((Coin) other.getCharacter());
-				other.getCharacter().setActive(false);
 				return;
 			}
 
