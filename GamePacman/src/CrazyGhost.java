@@ -2,8 +2,8 @@ import java.util.Random;
 
 public class CrazyGhost extends Ghost {
 
-    public CrazyGhost(float speed, float x, float y, int dimension) {
-        super(speed, x, y, dimension);
+    public CrazyGhost(float speed, float x, float y) {
+        super(speed, x, y);
     }
 
     @Override
@@ -18,7 +18,7 @@ public class CrazyGhost extends Ghost {
         Random rand = new Random();
 
         int randDir = rand.nextInt(100);
-
+        /*
         if(!Maze.collision(dimension, dimension, x, y)) {
             x = lastX;
             y = lastY;
@@ -28,6 +28,8 @@ public class CrazyGhost extends Ghost {
         else {
             changeDirection(randDir);
         }
+
+         */
     }
 
 }
