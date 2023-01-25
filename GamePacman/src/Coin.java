@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class Coin extends Character{
+public class Coin extends Character {
 
 	static final int VALUE = 1;
 	static final int DIMENSION = 4;

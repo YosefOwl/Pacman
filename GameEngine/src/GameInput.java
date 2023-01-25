@@ -15,7 +15,7 @@ public class GameInput implements KeyListener {
 	  return theGameInput;
   }
   
-  public GameInput() {
+  private GameInput() {
 	  
 	events = new LinkedList<GameInputEvent>();
 	

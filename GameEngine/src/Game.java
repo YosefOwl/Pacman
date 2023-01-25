@@ -5,6 +5,9 @@ public class Game extends JFrame {
 
   static final int WIDTH = 625;
   static final int HEIGHT = 480;
+  static final int HEIGHT_S_BAR = 50;
+  static final int TOTAL_HEIGHT = HEIGHT_S_BAR + HEIGHT;
+
   
   GameStateMachine stateMachine;
   
@@ -14,7 +17,7 @@ public class Game extends JFrame {
 
     Canvas canvas = new Canvas();
     canvas.setIgnoreRepaint( true );
-    canvas.setSize( WIDTH, HEIGHT );
+    canvas.setSize( WIDTH, TOTAL_HEIGHT);
 
     add( canvas );
     pack();

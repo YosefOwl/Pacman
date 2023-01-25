@@ -94,4 +94,24 @@ public abstract class Character implements ICollisional {
 
 	@Override
 	public abstract Point getPosition();
+
+	public void changeDirection(int direction) {
+
+		if (direction == GameData.RIGHT){
+			speedX = speed;
+			speedY = 0;
+		}
+		else if (direction == GameData.LEFT){
+			speedX = -speed;
+			speedY = 0;
+		}
+		else if (direction == GameData.UP){
+			speedY = -speed;
+			speedX = 0;
+		}
+		else if (direction == GameData.DOWN){
+			speedY = speed;
+			speedX = 0;
+		}
+	}
 }

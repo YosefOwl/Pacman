@@ -13,8 +13,8 @@ public class Pacman extends Character{
 	
 	public void move(long deltaTime) {
 
-		float lastx = x;
-		float lasty = y;
+		float lastX = x;
+		float lastY = y;
 		x = x + speedX*deltaTime;
 		y = y + speedY*deltaTime;
 		
@@ -25,15 +25,15 @@ public class Pacman extends Character{
 		
 		if (x < 0)
 			x = 0;
-		
-		if (x > Game.WIDTH - 11)
-			x = Game.WIDTH - 11;
-		
+
+		if (x > Game.WIDTH - dimension)
+			x = Game.WIDTH - dimension;
+
 		if (y < 0)
 			y = 0;
-		
-		if (y > Game.HEIGHT - 11)
-			y = Game.HEIGHT - 11;
+
+		if (y > Game.HEIGHT - dimension)
+			y = Game.HEIGHT - dimension;
 	}
 
 	@Override
