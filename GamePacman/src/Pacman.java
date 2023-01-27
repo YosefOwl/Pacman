@@ -1,9 +1,10 @@
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pacman extends Character {
-
+public class Pacman extends DynamicCharacter{
 	private List<Coin> coins = new ArrayList<>();
 	private long nextMoveCounterX = 0;
 	private long nextMoveCounterY = 0;
@@ -17,9 +18,7 @@ public class Pacman extends Character {
 		setDimension(GameData.PACMAN_D);
 		setStereotype(Stereotype.ePacman);
 	}
-
-
-
+	
 	public void move(long deltaTime) {
 
 		// TODO : implement identify wall
@@ -75,7 +74,22 @@ public class Pacman extends Character {
 	@Override
 	public void onCollisionEnter(ICollisional other) {
 		try{
-			if(other.getCharacter().getStereotype().equals(Stereotype.eCoin))
+			if(other.getCharacter().getStereotip().equals(Stereotip.eWall))
+			{
+				if(this.getLastPosition().x == this.getPosition().x){
+					this.setSpeedY(0);
+				}
+				if(this.getLastPosition().y == this.getPosition().y){
+					this.setSpeedX(0);
+				}
+				this.setPosition(this.getLastPosition());
+
+			}
+			else {
+				this.setSpeed(GameConsts.PACMAN_SPEED);
+			}
+
+			if(other.getCharacter().getStereotip().equals(Stereotip.eCoin))
 			{
 				coins.add((Coin) other.getCharacter());
 				return;
@@ -98,8 +112,15 @@ public class Pacman extends Character {
 	}
 
 	@Override
+	public Point getPosition() {
+		return position;
+	}
+
+	@Override
 	public Shape getCollider() {
-		return null;
+		return new Rectangle(
+				this.getPosition(),
+				new Dimension(this.dimension.width + 2,this.dimension.height + 2));
 	}
 
 	@Override

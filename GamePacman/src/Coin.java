@@ -7,18 +7,16 @@ public class Coin extends Character {
 	
 	public Coin(int x, int y) {
 		super(x, y);
-		setDimension(DIMENSION);
+		setDimension(new Dimension(DIMENSION,DIMENSION));
 		setActive(true);
 		setStereotype(Stereotype.eCoin);
 	}
 
 	@Override
 	public void onCollisionEnter(ICollisional other) {
-		if(other.getCharacter().getStereotype().equals(Stereotype.ePacman))
-		{
+		if(other.getCharacter().getStereotype().equals(Stereotype.ePacman)) {
 			this.setActive(false);
 		}
-
 	}
 
 	@Override
@@ -27,13 +25,25 @@ public class Coin extends Character {
 	}
 
 	@Override
-	public Shape getCollider() {
-		return null;
+	public Point getPosition() {
+		return position;
 	}
 
 	@Override
 	public Point getPosition() {
 		return point;
+	}
+
+	@Override
+	public Shape getCollider() {
+		return new Rectangle(
+				this.position,
+				new Dimension(DIMENSION + 2,DIMENSION + 2));
+	}
+
+	@Override
+	public boolean HasBound() {
+		return false;
 	}
 
 	public void setState(boolean state) {

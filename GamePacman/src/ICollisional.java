@@ -1,7 +1,9 @@
 import java.awt.*;
 public interface ICollisional {
-    public void onCollisionEnter(ICollisional other);
-    public Character getCharacter();
-    public Shape getCollider();
-    public Point getPosition();
+    void onCollisionEnter(ICollisional other);
+    Character getCharacter();
+    Point getPosition();
+    Shape getCollider();
+
+    boolean HasBound();
 }

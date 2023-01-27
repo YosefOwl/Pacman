@@ -1,15 +1,18 @@
 import java.awt.*;
 import java.util.Random;
 
-public class Ghost extends Character {
-	
+public class Ghost extends DynamicCharacter {
+	private Rectangle collider;
 	public Ghost(float speed, int x, int y) {
 		super(x, y);
-		setSpeed(speed);
-		setDimension(GameData.GHOST_D);
-		setStereotype(Stereotype.eGhost);
-		setDirection(GameData.UP);
+		this.speedX = speed;
 		setActive(true);
+		setStereotype(Stereotype.eGhost);
+		collider = new Rectangle(
+				this.getPosition(),
+				new Dimension((int)GameConsts.BLOCK_WIDTH,(int)GameConsts.BLOCK_HEIGHT)
+		);
+
 	}
 
 	private long time = 0;
@@ -62,6 +65,11 @@ public class Ghost extends Character {
 	@Override
 	public Character getCharacter() {
 		return this;
+	}
+
+	@Override
+	public Point getPosition() {
+		return null;
 	}
 
 	@Override

@@ -30,7 +30,7 @@ public class GameData {
     private int ghostNum;
 
     private GameData() {
-
+        // TODO values shall be final
         score = 0;
         gameLife = LIFE;
         ghostNum = NUMBER_OF_GHOST;
@@ -67,6 +67,5 @@ public class GameData {
     public void setGameLife(int gameLife) {
         this.gameLife = gameLife;
     }
-
 
 }

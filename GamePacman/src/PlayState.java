@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class PlayState extends GameState {
 
@@ -10,25 +11,26 @@ public class PlayState extends GameState {
 	private Pacman pacman;
 	private Maze maze;
 	private CollisionDetector collisionDetector;
-	private GameData data;
+	
+	private List<DynamicCharacter> dynamicCharacters = new ArrayList<>();
+
+	//private GameData data;
 
 	public PlayState() {
 		data = GameData.getInstance();
 		ghosts = new ArrayList<>();
-
-		// TODO : move init ghost to method
-		int x = GameData.GHOST_X;
-		for (int i = 0; i < GameData.NUMBER_OF_GHOST ; i++) {
-			ghosts.add(new Ghost(GameData.DEFAULT_SPEED, x, GameData.GHOST_Y));
-			x += Maze.BLOCK_WIDTH;
-		}
-
-		pacman = new Pacman(GameData.DEFAULT_SPEED, GameData.PACMAN_X, GameData.PACMAN_Y);
-		pacman.setActive(true);
-		pacman.setStereotype(Stereotype.ePacman);
+//		int x = GameData.GHOST_X;
+//		for (int i = 0; i < GameData.NUMBER_OF_GHOST ; i++) {
+//			ghosts.add(new Ghost(GameData.DEFAULT_SPEED, x, GameData.GHOST_Y));
+//			x += Maze.BLOCK_WIDTH;
+//		}
+		pacman = new Pacman(GameConsts.PACMAN_SPEED, new Point(26,35));
 		maze = new Maze();
 
 		collisionDetector = new CollisionDetector(maze);
+		dynamicCharacters.add(pacman);
+		dynamicCharacters.addAll(ghosts);
+		//data = GameData.getInstance();
 	}
 
 	public void enter(Object memento) {
@@ -55,6 +57,7 @@ public class PlayState extends GameState {
 		if (aKeyCode == KeyEvent.VK_RIGHT)
 			pacman.setDirection(GameData.RIGHT);
 	}
+	
 	public void update(long deltaTime) {
 
 		pacman.move(deltaTime);
@@ -65,8 +68,14 @@ public class PlayState extends GameState {
 			ghost.move(deltaTime);
 		}
 
-		var collisions = collisionDetector.DetectCollisions();
+		var collisions = collisionDetector.DetectCollisions(dynamicCharacters);
 		collisionDetector.ExecuteOnCollisionEnters(collisions);
+		ghosts.stream()
+				.forEach(ghost -> {
+					if(ghost.isActive){
+						ghost.move(deltaTime);
+					}
+				});
 	}
 
 	public boolean isActive() { return active; }
@@ -87,25 +96,36 @@ public class PlayState extends GameState {
 	// TODO may need to move to GameData class or Pacman class
 	private void drawPacman(Graphics g) {
 		g.setColor(Color.YELLOW);
-		int x = pacman.point.x;
-		int y = pacman.point.y;
-		int d = pacman.dimension;
+		g.drawOval(pacman.getPosition().x, pacman.getPosition().y,
+				   pacman.getDimension().width, pacman.getDimension().height);
+		g.fillOval(pacman.getPosition().x, pacman.getPosition().y,
+				   pacman.getDimension().width,
+				   pacman.getDimension().height);
 
-		g.drawRect(x, y, d, d);
-		g.fillRect(x, y, d, d);
+		g.setColor(Color.CYAN);
+		g.drawRect(pacman.getCollider().getBounds().x,
+				pacman.getCollider().getBounds().y,
+				pacman.getCollider().getBounds().width,
+				pacman.getCollider().getBounds().height
+				);
 	}
+
+	// TODO may need to move to GameData class or Pacman class
 
 	public void drawGhosts(Graphics g) {
 		g.setColor(Color.GREEN);
 
 		for (Ghost ghost : ghosts) {
 
-			int x = ghost.point.x;
-			int y = ghost.point.y;
-			int d = ghost.dimension;
+			int x , y, dw,dh;
+			
+			x = ghost.point.x;
+			y = ghost.point.y;
+			dw = ghosts.get(i).getDimension().width;
+			dh = ghosts.get(i).getDimension().height;
 
-			g.drawRect(x, y, d, d);
-			g.fillRect(x, y, d, d);
+			g.drawRect(x, y, dw, dh);
+			g.fillRect(x, y, dw, dh);
 		}
 	}
 
