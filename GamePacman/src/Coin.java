@@ -1,25 +1,38 @@
+import java.awt.*;
 
 public class Coin extends Character {
 
-	static final int VALUE = 1;
 	static final int DIMENSION = 4;
-	private boolean eaten;
 	
-	public Coin(float speed, float x, float y) {
-		super(speed, x, y, DIMENSION); //x=0, y=0
-	}
-	
-	public void setState(boolean state) {
-		this.eaten = state;
-	}
-	
-	public boolean getState() {
-		return this.eaten;
+	public Coin(int x, int y) {
+		super(x, y);
+		setDimension(new Dimension(DIMENSION,DIMENSION));
+		setActive(true);
+		setStereotype(Stereotype.eCoin);
 	}
 
 	@Override
-	public void move(long deltaTime) {
-		// DO NOTHING
+	public void onCollisionEnter(ICollisional other) {
+		if(other.getCharacter().getStereotype().equals(Stereotype.ePacman)) {
+			this.setActive(false);
+		}
+	}
+
+	@Override
+	public Character getCharacter() {
+		return this;
+	}
+
+	@Override
+	public Point getPosition() {
+		return position;
+	}
+
+	@Override
+	public Shape getCollider() {
+		return new Rectangle(
+				this.position,
+				new Dimension(DIMENSION + 2,DIMENSION + 2));
 	}
 
 }
