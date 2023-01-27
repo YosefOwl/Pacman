@@ -2,9 +2,9 @@ import java.awt.*;
 import java.io.Console;
 
 public class MazeWall extends Character {
-    public MazeWall(Point position) {
-        super(position);
-        setStereotip(Stereotip.eWall);
+    public MazeWall(int x, int y) {
+        super(x, y);
+        setStereotype(Stereotype.eWall);
         setActive(true);
     }
     @Override

@@ -3,10 +3,6 @@ import java.util.Optional;
 import javax.swing.JPanel;
 
 public class Maze extends JPanel {
-	static final int MAZE_ROW = 15;
-	static final int MAZE_COL = 26;
-	static final float BLOCK_WIDTH = Game.WIDTH / (float) MAZE_COL;
-	static final float BLOCK_HEIGHT = Game.HEIGHT / (float) MAZE_ROW;
 	private static MazeData	[][] mazeData;
 
 	public Maze() {
@@ -42,12 +38,12 @@ public class Maze extends JPanel {
 				if (mazeSketch[i][j] == 1) {
 					this.mazeData[i][j]
 							.getCollisionals()
-							.add(new MazeWall(new Point((int)(j * GameConsts.BLOCK_WIDTH),(int)(i * GameConsts.BLOCK_HEIGHT))));
+							.add(new MazeWall( (int)(j * GameConsts.BLOCK_WIDTH),(int)(i * GameConsts.BLOCK_HEIGHT) ) );
 					this.mazeData[i][j].setWall(true);
 				}else {
 					int yCoin = (int)((i * GameConsts.BLOCK_HEIGHT) + (GameConsts.BLOCK_HEIGHT / 2) - (Coin.DIMENSION / 1f));
 					int xCoin = (int)((j * GameConsts.BLOCK_WIDTH)  + (GameConsts.BLOCK_WIDTH / 2) - (Coin.DIMENSION / 1f));
-					Coin coin = new Coin(xCoin, yCoin));
+					Coin coin = new Coin(xCoin, yCoin);
 					this.mazeData[i][j].getCollisionals().add(coin);
 				}
 			}
@@ -55,7 +51,7 @@ public class Maze extends JPanel {
 	}
 
 	public void render(Graphics graphics) {
-		var maze = getMap();
+		var maze = getMap(); // TODO
 
 		for (int row = 0; row < mazeData.length; row++) {
 			for (int col = 0; col < mazeData[row].length; col++) {
@@ -64,7 +60,7 @@ public class Maze extends JPanel {
 
 					var wall = mazeData[row][col].getCollisionals()
 							.stream()
-							.filter(c -> c.getCharacter().getStereotip().equals(Stereotip.eWall))
+							.filter(c -> c.getCharacter().getStereotype().equals(Stereotype.eWall))
 							.findFirst()
 							.get();
 
@@ -95,7 +91,7 @@ public class Maze extends JPanel {
 				.stream()
 				.filter(c -> c.getCharacter() != null &&
 							 c.getCharacter().isActive() &&
-							 c.getCharacter().getStereotip().equals(Stereotip.eCoin))
+							 c.getCharacter().getStereotype().equals(Stereotype.eCoin))
 				.findFirst();
 		return optionalCoin;
 	}

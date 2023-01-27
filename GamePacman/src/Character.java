@@ -2,17 +2,17 @@ import java.awt.*;
 
 public abstract class Character implements ICollisional {
 	
-	protected Point point;
+	protected Point position;
 	protected boolean isActive;
 	protected Stereotype stereotype;
 	protected Dimension dimension;
+	protected int direction;
 
 	public Character(int x, int y) {
 
-		point = new Point(x, y);
-		setDimension(new Dimension(19,19));
+		position = new Point(x, y);
+		setDimension(new Dimension(19,19)); // TODO:
 	}
-
 
 	public void move(long deltaTime) {}
 
@@ -43,14 +43,22 @@ public abstract class Character implements ICollisional {
 		this.position = position;
 	}
 
+	public int getDirection() {
+		return direction;
+	}
+
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
+
 	public void translatePosition(int dx, int dy) {
-		point.translate(dx, dy);
+		position.translate(dx, dy);
 	}
 
 	@Override
 	public abstract void onCollisionEnter(ICollisional other);
 
 	@Override
-	public abstract Point getPosition();
+	public abstract Point getPosition(); // TODO
 	
 }

@@ -30,11 +30,6 @@ public class Coin extends Character {
 	}
 
 	@Override
-	public Point getPosition() {
-		return point;
-	}
-
-	@Override
 	public Shape getCollider() {
 		return new Rectangle(
 				this.position,

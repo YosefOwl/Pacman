@@ -4,11 +4,9 @@ public abstract class DynamicCharacter extends Character {
 
     protected Point lastPosition;
     protected float speed;
-    protected float speedX;
-    protected float speedY;
 
-    public DynamicCharacter(float speed, Point position) {
-        super(position);
+    public DynamicCharacter(float speed, int x, int y) {
+        super(x, y);
         setSpeed(speed);
     }
 
@@ -29,19 +27,4 @@ public abstract class DynamicCharacter extends Character {
         this.lastPosition = lastPosition;
     }
 
-    public float getSpeedX() {
-        return speedX;
-    }
-
-    public void setSpeedX(float speedX) {
-        this.speedX = speedX;
-    }
-
-    public float getSpeedY() {
-        return speedY;
-    }
-
-    public void setSpeedY(float speedY) {
-        this.speedY = speedY;
-    }
 }

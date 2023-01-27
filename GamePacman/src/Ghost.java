@@ -4,8 +4,7 @@ import java.util.Random;
 public class Ghost extends DynamicCharacter {
 	private Rectangle collider;
 	public Ghost(float speed, int x, int y) {
-		super(x, y);
-		this.speedX = speed;
+		super(speed, x, y);
 		setActive(true);
 		setStereotype(Stereotype.eGhost);
 		collider = new Rectangle(
@@ -32,29 +31,18 @@ public class Ghost extends DynamicCharacter {
 			time = 0;
 		}
 
-		if (direction == GameData.RIGHT)
+		if (direction == GameConsts.RIGHT)
 			translatePosition( (int)(speed*deltaTime), 0 );
 
-		else if (direction == GameData.LEFT)
+		else if (direction == GameConsts.LEFT)
 			translatePosition( (int)(-speed*deltaTime), 0 );
 
-		else if (direction == GameData.UP)
+		else if (direction == GameConsts.UP)
 			translatePosition( 0, (int)(-speed*deltaTime) );
 
-		else if (direction == GameData.DOWN)
+		else if (direction == GameConsts.DOWN)
 			translatePosition( 0, (int)(speed*deltaTime) );
 
-		if (point.x < 0)
-			point.x = 0;
-
-		if (point.x > Game.WIDTH - dimension)
-			point.x = Game.WIDTH - dimension;
-
-		if (point.y < 0)
-			point.y = 0;
-
-		if (point.y > Game.HEIGHT - dimension)
-			point.y = Game.HEIGHT - dimension;
 	}
 
 	@Override
@@ -69,7 +57,7 @@ public class Ghost extends DynamicCharacter {
 
 	@Override
 	public Point getPosition() {
-		return null;
+		return position;
 	}
 
 	@Override
@@ -78,8 +66,8 @@ public class Ghost extends DynamicCharacter {
 	}
 
 	@Override
-	public Point getPosition() {
-		return point;
+	public boolean HasBound() {
+		return false;
 	}
 
 }
