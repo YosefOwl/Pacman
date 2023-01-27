@@ -3,7 +3,6 @@ import java.awt.*;
 public class Coin extends Character {
 
 	static final int DIMENSION = 4;
-	private boolean eaten;
 	
 	public Coin(int x, int y) {
 		super(x, y);
@@ -36,16 +35,4 @@ public class Coin extends Character {
 				new Dimension(DIMENSION + 2,DIMENSION + 2));
 	}
 
-	@Override
-	public boolean HasBound() {
-		return false;
-	}
-
-	public void setState(boolean state) {
-		this.eaten = state;
-	}
-	
-	public boolean getState() {
-		return this.eaten;
-	}
 }

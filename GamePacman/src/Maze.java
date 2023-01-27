@@ -130,15 +130,23 @@ public class Maze extends JPanel {
 
 
 
-	public void setCharacterInPosition(ICollisional character){
+	public void setCharacterInPosition(DynamicCharacter character){
 
-		int col = character.getPosition().x / ((int) GameConsts.BLOCK_WIDTH);
-		int row = character.getPosition().y / ((int) GameConsts.BLOCK_HEIGHT);
+		int col = character.getPosition().x / GameConsts.BLOCK_WIDTH;
+		int row = character.getPosition().y / GameConsts.BLOCK_HEIGHT;
+
+		int lastCol = character.getLastPosition().x / GameConsts.BLOCK_WIDTH;
+		int lastRow = character.getLastPosition().y / GameConsts.BLOCK_HEIGHT;
 
 		if(!mazeData[row][col].getCollisionals().contains(character)) {
+
 			mazeData[row][col]
 					.getCollisionals()
 					.add(character);
+
+			mazeData[lastRow][lastCol]
+					.getCollisionals()
+					.remove(character);
 		}
 
 	}

@@ -117,8 +117,8 @@ public class CollisionDetector {
     }
 
     private static Pair<Line2D, Line2D> findIntersectionBetweenLines(List<Line2D> boundsLines, List<Line2D> otherBoundsLines) {
-        for(int i = 1; i < boundsLines.size() ; i++){
-            for(int j = 1; j < otherBoundsLines.size() ; j++){
+        for(int i = 0; i < boundsLines.size() ; i++){
+            for(int j = 0; j < otherBoundsLines.size() ; j++){
                 if (boundsLines.get(i).intersectsLine(otherBoundsLines.get(j)))
                 {
                     return Pair.of(boundsLines.get(i), otherBoundsLines.get(j));
@@ -161,9 +161,9 @@ public class CollisionDetector {
         var rightLine = new Line2D.Double(upperRight,bottomRight);
 
         Point bottomLeft = new Point((int)bounds.getMinX(),(int)bounds.getMaxY());
-        var bottomLine = new Line2D.Double(bottomLeft,bottomRight);
+        var bottomLine = new Line2D.Double(bottomRight, bottomLeft);
 
-        var leftLine = new Line2D.Double(bottomLeft,upperLeft);
+        var leftLine = new Line2D.Double(bottomLeft, upperLeft);
 
         lines.add(upperLine);
         lines.add(rightLine);
@@ -182,8 +182,8 @@ public class CollisionDetector {
     }
 
     private Point getMazePointByCharacterPosition(Character character){
-        double col = character.getPosition().x / ((GameConsts.BLOCK_WIDTH));
-        double row = character.getPosition().y / ((GameConsts.BLOCK_HEIGHT));
+        double col = character.getPosition().x / GameConsts.BLOCK_WIDTH;
+        double row = character.getPosition().y / GameConsts.BLOCK_HEIGHT;
 
         return new Point((int)Math.round(row),(int)Math.round(col));
     }

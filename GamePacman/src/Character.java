@@ -11,7 +11,7 @@ public abstract class Character implements ICollisional {
 	public Character(int x, int y) {
 
 		position = new Point(x, y);
-		setDimension(new Dimension(19,19)); // TODO:
+		setDimension(new Dimension(0,0));
 	}
 
 	public void move(long deltaTime) {}

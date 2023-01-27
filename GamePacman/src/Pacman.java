@@ -24,6 +24,7 @@ public class Pacman extends DynamicCharacter {
 		// TODO : implement identify wall
 
 		setLastPosition(new Point(this.getPosition()));
+
 		int vt = (int) (speed*deltaTime);
 
 		if (nextMoveCounterX > 0){
@@ -39,29 +40,27 @@ public class Pacman extends DynamicCharacter {
 			return;
 		}
 
-
-
 		if(direction == GameConsts.UP) {
-			nextMoveCounterY = (int)GameConsts.BLOCK_HEIGHT;
+			nextMoveCounterY = GameConsts.BLOCK_HEIGHT;
 			dy = -vt;
 			dx = 0;
 			nextMoveCounterX = 0;
 		}
 		else if(direction == GameConsts.DOWN) {
-			nextMoveCounterY = (int)GameConsts.BLOCK_HEIGHT;
+			nextMoveCounterY = GameConsts.BLOCK_HEIGHT;
 			dy = vt;
 			dx = 0;
 			nextMoveCounterX = 0;
 		}
 
 		if (direction == GameConsts.RIGHT) {
-			nextMoveCounterX = (int)GameConsts.BLOCK_WIDTH;
+			nextMoveCounterX = GameConsts.BLOCK_WIDTH;
 			dx = vt;
 			dy = 0;
 			nextMoveCounterY = 0;
 		}
 		else if (direction == GameConsts.LEFT) {
-			nextMoveCounterX = (int)GameConsts.BLOCK_WIDTH;
+			nextMoveCounterX = GameConsts.BLOCK_WIDTH;
 			dx = -vt;
 			dy = 0;
 			nextMoveCounterY = 0;
@@ -72,39 +71,22 @@ public class Pacman extends DynamicCharacter {
 
 	@Override
 	public void onCollisionEnter(ICollisional other) {
-		try{
-			if(other.getCharacter().getStereotype().equals(Stereotype.eWall))
-			{
-				if(this.getLastPosition().x == this.getPosition().x) {
-					nextMoveCounterY = 0;
+		if(other.getCharacter().getStereotype().equals(Stereotype.eWall)) {
+			nextMoveCounterX = 0;
+			nextMoveCounterY = 0;
+			this.setPosition(this.getLastPosition());
+		}
 
-				}
+		if(other.getCharacter().getStereotype().equals(Stereotype.eCoin)) {
+			coins.add((Coin) other.getCharacter());
+			return;
+		}
 
-				if(this.getLastPosition().y == this.getPosition().y){
-					nextMoveCounterX = 0;
-					//this.setSpeedX(0);
-				}
+		if(other.getCharacter().getStereotype().equals(Stereotype.eGhost)) {
 
-				this.setPosition(this.getLastPosition());
-
-			}
-			else {
-				this.setSpeed(GameConsts.DEFAULT_SPEED);
-			}
-
-			if(other.getCharacter().getStereotype().equals(Stereotype.eCoin))
-			{
-				coins.add((Coin) other.getCharacter());
-				return;
-			}
-
-			if(other.getCharacter().getStereotype().equals(Stereotype.eGhost))
-			{
-				this.setActive(false);
-				//TODO: set state "gameOver"
-			}
-		}catch (Exception e){
-			System.out.println(e.getMessage());
+			System.out.println("Crash ");
+			this.setActive(false);
+			//TODO: set state "gameOver"
 		}
 
 	}
@@ -120,11 +102,6 @@ public class Pacman extends DynamicCharacter {
 				new Point(this.getPosition().x + this.dimension.width/2 - GameConsts.BLOCK_WIDTH/2 + 1, this.getPosition().y + dimension.height/2 - GameConsts.BLOCK_HEIGHT/2 + 1),
 				new Dimension(GameConsts.BLOCK_WIDTH - 2,GameConsts.BLOCK_HEIGHT - 2) );
 		return shape;
-	}
-
-	@Override
-	public boolean HasBound() {
-		return false;
 	}
 
 	@Override

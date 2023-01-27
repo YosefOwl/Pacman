@@ -5,5 +5,4 @@ public interface ICollisional {
     Point getPosition();
     Shape getCollider();
 
-    boolean HasBound();
 }

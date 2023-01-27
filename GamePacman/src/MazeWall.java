@@ -36,8 +36,4 @@ public class MazeWall extends Character {
         return null;
     }
 
-    @Override
-    public boolean HasBound() {
-        return true;
-    }
 }

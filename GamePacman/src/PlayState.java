@@ -19,18 +19,19 @@ public class PlayState extends GameState {
 	public PlayState() {
 		data = GameData.getInstance();
 		ghosts = new ArrayList<>();
-//		int x = GameConsts.GHOST_X;
-//		for (int i = 0; i < GameConsts.NUMBER_OF_GHOST ; i++) {
-//			ghosts.add(new Ghost(GameConsts.DEFAULT_SPEED, x, GameConsts.GHOST_Y));
-//			x += GameConsts.BLOCK_WIDTH;
-//		}
+
+		int x = GameConsts.GHOST_X;
+
+		for (int i = 0; i < GameConsts.NUMBER_OF_GHOST ; i++) {
+			ghosts.add(new Ghost(GameConsts.DEFAULT_SPEED, x, GameConsts.GHOST_Y));
+			x += GameConsts.BLOCK_WIDTH;
+		}
 		pacman = new Pacman(GameConsts.DEFAULT_SPEED, GameConsts.PACMAN_X, GameConsts.PACMAN_Y);
 		maze = new Maze();
 
 		collisionDetector = new CollisionDetector(maze);
 		dynamicCharacters.add(pacman);
 		dynamicCharacters.addAll(ghosts);
-		//data = GameData.getInstance();
 	}
 
 	public void enter(Object memento) {
@@ -59,7 +60,6 @@ public class PlayState extends GameState {
 	}
 	
 	public void update(long deltaTime) {
-
 
 		pacman.move(deltaTime);
 		maze.setCharacterInPosition(pacman);

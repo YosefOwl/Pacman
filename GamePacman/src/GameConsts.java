@@ -21,13 +21,13 @@ public final record GameConsts() {
     static final int START_ROW_PAC = 1;
     static final int START_COL_PAC = 1;
     static final int PACMAN_X = (BLOCK_WIDTH*START_ROW_PAC + (BLOCK_WIDTH - PACMAN_D)/2) ;
-    static final int PACMAN_Y = (int)(BLOCK_HEIGHT*START_COL_PAC + (BLOCK_HEIGHT - PACMAN_D)/2) ;
+    static final int PACMAN_Y = (BLOCK_HEIGHT*START_COL_PAC + (BLOCK_HEIGHT - PACMAN_D)/2) ;
 
     static final int NUMBER_OF_GHOST = 6;
     static final int GHOST_D = 16;
     static final int START_ROW_G = 10;
     static final int START_COL_G = 7;
-    static final int GHOST_X = (int)(BLOCK_WIDTH*START_ROW_G + (BLOCK_WIDTH - GHOST_D)/2);
-    static final int GHOST_Y = (int)(BLOCK_HEIGHT*START_COL_G + (BLOCK_HEIGHT - GHOST_D)/2);
+    static final int GHOST_X = (BLOCK_WIDTH*START_ROW_G + (BLOCK_WIDTH - GHOST_D)/2);
+    static final int GHOST_Y = (BLOCK_HEIGHT*START_COL_G + (BLOCK_HEIGHT - GHOST_D)/2);
 
 }
