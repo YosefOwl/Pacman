@@ -1,7 +1,5 @@
-import java.awt.Color;
-import java.awt.Graphics;
-import java.util.Arrays;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 public class Maze extends JPanel {
 	static final int MAZE_ROW = 15;
@@ -45,7 +43,7 @@ public class Maze extends JPanel {
 				}else {
 					float yCoin = (i * BLOCK_HEIGHT) + (BLOCK_HEIGHT / 2) - (Coin.DIMENSION / 1f);
 					float xCoin = (j * BLOCK_WIDTH)  + (BLOCK_WIDTH / 2) - (Coin.DIMENSION / 1f);
-					Coin coin = new Coin(0, xCoin, yCoin);
+					Coin coin = new Coin((int)xCoin, (int)yCoin);
 					this.mazeData[i][j].getCharacters().add(coin);
 				}
 			}
@@ -68,7 +66,7 @@ public class Maze extends JPanel {
 					var optionalCoin = mazeData[row][col]
 							.getCharacters()
 							.stream()
-							.filter(c -> c.isActive() && c.getStereotip().equals(Stereotip.eCoin))
+							.filter(c -> c.isActive() && c.getStereotype().equals(Stereotype.eCoin))
 							.findFirst();
 					if(!optionalCoin.isEmpty())
 					{
@@ -81,13 +79,6 @@ public class Maze extends JPanel {
 				}
 			}
 		}
-
-		// gBuffer.setColor(Color.yellow);
-		// gBuffer.drawOval(50, 50, 20, 20);
-		// String message = "Scores : 3" ;
-		// gBuffer.setColor(Color.pink);
-		// gBuffer.drawString(message, 100, 100);
-
 	}
 
 	public MazeData[][] getMap() {

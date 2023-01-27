@@ -1,27 +1,31 @@
 import java.awt.*;
 
 public abstract class Character implements ICollisional {
-	
+
 	protected float speed;
-	protected float x;
-	protected float y;
+	protected Point point;
 	protected boolean isActive;
-	protected Stereotip stereotip;
+	protected Stereotype stereotype;
 	protected int dimension;
-	protected float speedX;
-	protected float speedY;
-	
-	public Character(float speed, float x, float y) {
-		this.speed = speed;
-		this.x = x;
-		this.y = y;
-		this.dimension = 19;
-		this.speedX = 0.0f;
-		this.speedY = 0.0f;
+	protected int direction;
+
+	public Character(int x, int y) {
+
+		point = new Point(x, y);
+		setDimension(0);
+		setDirection(0);
+		setSpeed(0);
 	}
 
-	public void move(long deltaTime) {
+	public int getDirection() {
+		return direction;
 	}
+
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
+
+	public void move(long deltaTime) {}
 
 	public boolean isActive() {
 		return isActive;
@@ -31,12 +35,12 @@ public abstract class Character implements ICollisional {
 		isActive = active;
 	}
 
-	public Stereotip getStereotip() {
-		return stereotip;
+	public Stereotype getStereotype() {
+		return stereotype;
 	}
 
-	public void setStereotip(Stereotip stereotip) {
-		this.stereotip = stereotip;
+	public void setStereotype(Stereotype stereotype) {
+		this.stereotype = stereotype;
 	}
 	public int getDimension() {
 		return dimension;
@@ -44,14 +48,6 @@ public abstract class Character implements ICollisional {
 
 	public int setDimension(int dim) {
 		return this.dimension = dim;
-	}
-	
-	public float getX() {
-		return x;
-	}
-	
-	public float getY() {
-		return y;
 	}
 
 	public float getSpeed() {
@@ -62,28 +58,8 @@ public abstract class Character implements ICollisional {
 		this.speed = speed;
 	}
 
-	public float getSpeedX() {
-		return speedX;
-	}
-
-	public void setSpeedX(float speedX) {
-		this.speedX = speedX;
-	}
-
-	public float getSpeedY() {
-		return speedY;
-	}
-
-	public void setSpeedY(float speedY) {
-		this.speedY = speedY;
-	}
-
-	public void setX(float x) {
-		this.x = x;
-	}
-
-	public void setY(float y) {
-		this.y = y;
+	public void translatePosition(int dx, int dy) {
+		point.translate(dx, dy);
 	}
 
 	@Override
@@ -94,24 +70,4 @@ public abstract class Character implements ICollisional {
 
 	@Override
 	public abstract Point getPosition();
-
-	public void changeDirection(int direction) {
-
-		if (direction == GameData.RIGHT){
-			speedX = speed;
-			speedY = 0;
-		}
-		else if (direction == GameData.LEFT){
-			speedX = -speed;
-			speedY = 0;
-		}
-		else if (direction == GameData.UP){
-			speedY = -speed;
-			speedX = 0;
-		}
-		else if (direction == GameData.DOWN){
-			speedY = speed;
-			speedX = 0;
-		}
-	}
 }

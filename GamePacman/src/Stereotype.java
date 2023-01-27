@@ -1,3 +1,3 @@
-public enum Stereotip {
+public enum Stereotype {
     eCoin,ePacman,eGhost
 }

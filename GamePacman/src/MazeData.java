@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class MazeData {
     private ArrayList<Character> characters = new ArrayList<>();

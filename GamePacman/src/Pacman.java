@@ -1,51 +1,87 @@
-import com.sun.tools.jconsole.JConsoleContext;
-
 import java.awt.*;
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pacman extends Character{
+public class Pacman extends Character {
+
 	private List<Coin> coins = new ArrayList<>();
-	public Pacman(float speed, float x, float y) {
-		super(speed, x, y);
+	private long nextMoveCounterX = 0;
+	private long nextMoveCounterY = 0;
+	private int dx = 0;
+	private int dy = 0;
+
+	public Pacman(float speed, int x, int y) {
+		super(x, y);
+
+		setSpeed(speed);
+		setDimension(GameData.PACMAN_D);
+		setStereotype(Stereotype.ePacman);
 	}
-	
+
+
+
 	public void move(long deltaTime) {
 
-		float lastX = x;
-		float lastY = y;
-		x = x + speedX*deltaTime;
-		y = y + speedY*deltaTime;
-		
-//		if(Maze.collision(this.getDimension() , this.getDimension(), x, y)==false) {
-//			x=lastx;
-//			y=lasty;
-//		}
-		
-		if (x < 0)
-			x = 0;
+		// TODO : implement identify wall
 
-		if (x > Game.WIDTH - dimension)
-			x = Game.WIDTH - dimension;
+		int vt = (int) (speed*deltaTime);
 
-		if (y < 0)
-			y = 0;
+		if (nextMoveCounterX > 0){
+			translatePosition(dx, dy);
+			nextMoveCounterX--;
 
-		if (y > Game.HEIGHT - dimension)
-			y = Game.HEIGHT - dimension;
+			return;
+		}
+
+		if (nextMoveCounterY > 0){
+			translatePosition(dx, dy);
+			nextMoveCounterY--;
+
+			return;
+		}
+
+
+
+		if(direction == GameData.UP) {
+			nextMoveCounterY = (int)Maze.BLOCK_HEIGHT;
+			dy = -vt;
+			dx = 0;
+			direction = 0;
+			nextMoveCounterX = 0;
+		}
+		else if(direction == GameData.DOWN) {
+			nextMoveCounterY = (int)Maze.BLOCK_HEIGHT;
+			dy = vt;
+			dx = 0;
+			direction = 0;
+			nextMoveCounterX = 0;
+		}
+		if (direction == GameData.RIGHT) {
+			nextMoveCounterX = (int)Maze.BLOCK_WIDTH;
+			dx = vt;
+			dy = 0;
+			direction = 0;
+			nextMoveCounterY = 0;
+		}
+		else if (direction == GameData.LEFT) {
+			nextMoveCounterX = (int)Maze.BLOCK_WIDTH;
+			dx = -vt;
+			direction = 0;
+			dy = 0;
+			nextMoveCounterY = 0;
+		}
 	}
 
 	@Override
 	public void onCollisionEnter(ICollisional other) {
 		try{
-			if(other.getCharacter().getStereotip().equals(Stereotip.eCoin))
+			if(other.getCharacter().getStereotype().equals(Stereotype.eCoin))
 			{
 				coins.add((Coin) other.getCharacter());
 				return;
 			}
 
-			if(other.getCharacter().getStereotip().equals(Stereotip.eGhost))
+			if(other.getCharacter().getStereotype().equals(Stereotype.eGhost))
 			{
 				this.setActive(false);
 				//TODO: set state "gameOver"
@@ -68,6 +104,6 @@ public class Pacman extends Character{
 
 	@Override
 	public Point getPosition() {
-		return new Point((int)x,(int)y);
+		return point;
 	}
 }
