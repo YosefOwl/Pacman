@@ -1,3 +1,3 @@
 public enum Stereotip {
-    eCoin,ePacman,eGhost
+    eCoin,ePacman,eGhost,eWall
 }

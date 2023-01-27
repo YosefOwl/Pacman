@@ -1,17 +1,22 @@
 import java.awt.*;
 
-public class Ghost extends Character {
-	
-	public Ghost(float speed, float x, float y) {
-		super(speed, x, y);
+public class Ghost extends DynamicCharacter {
+	private Rectangle collider;
+	public Ghost(float speed, Point position) {
+		super(speed, position);
 		this.speedX = speed;
+		collider = new Rectangle(
+				this.getPosition(),
+				new Dimension((int)GameConsts.BLOCK_WIDTH,(int)GameConsts.BLOCK_HEIGHT)
+		);
+
 	}
 
 	
 	public void move(long deltaTime) {
 		//TODO: implement
-		x = x + speedX*deltaTime;
-		y = y + speedY*deltaTime;
+		position.x = (int)(position.x + speedX*deltaTime);
+		position.y = (int)(position.y + speedY*deltaTime);
 
 	}
 
@@ -26,13 +31,18 @@ public class Ghost extends Character {
 	}
 
 	@Override
+	public Point getPosition() {
+		return null;
+	}
+
+	@Override
 	public Shape getCollider() {
 		return null;
 	}
 
 	@Override
-	public Point getPosition() {
-		return null;
+	public boolean HasBound() {
+		return true;
 	}
 
 }

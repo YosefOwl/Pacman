@@ -11,17 +11,19 @@ public class PlayState extends GameState {
 	private Pacman pacman;
 	private Maze maze;
 	private CollisionDetector collisionDetector;
-	private GameData data;
+	private List<DynamicCharacter> dynamicCharacters = new ArrayList<>();
+
+	//private GameData data;
 
 	public PlayState() {
 		//ghost = new Ghost(0.1f, 20, 20);
 		ghosts = new ArrayList<>();
-		pacman = new Pacman(0.1f, 26, 35);
-		pacman.setActive(true);
-		pacman.setStereotip(Stereotip.ePacman);
+		pacman = new Pacman(GameConsts.PACMAN_SPEED, new Point(26,35));
 		maze = new Maze();
 		collisionDetector = new CollisionDetector(maze);
-		data = GameData.getInstance();
+		dynamicCharacters.add(pacman);
+		dynamicCharacters.addAll(ghosts);
+		//data = GameData.getInstance();
 	}
 
 	public void enter(Object memento) {
@@ -36,32 +38,31 @@ public class PlayState extends GameState {
 			active = false;
 
 		if (aKeyCode == KeyEvent.VK_UP)
-			pacman.changeDirection(GameData.UP);
+			pacman.changeDirection(GameConsts.UP);
 
 		if (aKeyCode == KeyEvent.VK_DOWN)
-			pacman.changeDirection(GameData.DOWN);
+			pacman.changeDirection(GameConsts.DOWN);
 
 		if (aKeyCode == KeyEvent.VK_LEFT)
-			pacman.changeDirection(GameData.LEFT);
+			pacman.changeDirection(GameConsts.LEFT);
 
 		if (aKeyCode == KeyEvent.VK_RIGHT)
-			pacman.changeDirection(GameData.RIGHT);
+			pacman.changeDirection(GameConsts.RIGHT);
 
 	}
 	
 	public void update(long deltaTime) {
 
 		pacman.move(deltaTime);
-		maze.setCharacterInPosition(pacman);
+		//maze.setCharacterInPosition(pacman);
 		//maze.setCharacterInPosition(ghost);
-		var collisions = collisionDetector.DetectCollisions();
+		var collisions = collisionDetector.DetectCollisions(dynamicCharacters);
 		collisionDetector.ExecuteOnCollisionEnters(collisions);
 		ghosts.stream()
-				.map(ghost -> {
+				.forEach(ghost -> {
 					if(ghost.isActive){
 						ghost.move(deltaTime);
 					}
-					return null;
 				});
 	}
 
@@ -83,8 +84,18 @@ public class PlayState extends GameState {
 	// TODO may need to move to GameData class or Pacman class
 	private void drawPacman(Graphics g) {
 		g.setColor(Color.YELLOW);
-		g.drawOval((int)pacman.getX(), (int)pacman.getY(), pacman.getDimension(), pacman.getDimension());
-		g.fillOval((int)pacman.getX(), (int)pacman.getY(), pacman.getDimension(), pacman.getDimension());
+		g.drawOval(pacman.getPosition().x, pacman.getPosition().y,
+				   pacman.getDimension().width, pacman.getDimension().height);
+		g.fillOval(pacman.getPosition().x, pacman.getPosition().y,
+				   pacman.getDimension().width,
+				   pacman.getDimension().height);
+
+		g.setColor(Color.CYAN);
+		g.drawRect(pacman.getCollider().getBounds().x,
+				pacman.getCollider().getBounds().y,
+				pacman.getCollider().getBounds().width,
+				pacman.getCollider().getBounds().height
+				);
 	}
 
 	// TODO may need to move to GameData class or Pacman class
@@ -94,23 +105,24 @@ public class PlayState extends GameState {
 
 		for(int i = 0; i < ghosts.size(); i++) {
 
-			int x , y, d;
+			int x , y, dw,dh;
 
-			x = (int)ghosts.get(i).getX();
-			y = (int)ghosts.get(i).getY();
-			d = ghosts.get(i).getDimension();
+			x = ghosts.get(i).getPosition().x;
+			y = ghosts.get(i).getPosition().y;
+			dw = ghosts.get(i).getDimension().width;
+			dh = ghosts.get(i).getDimension().height;
 
-			g.drawRect(x, y, d, d);
-			g.fillRect(x, y, d, d);
+			g.drawRect(x, y, dw, dh);
+			g.fillRect(x, y, dw, dh);
 		}
 	}
 
 	public void drawStatusBar(Graphics g) {
 		g.setColor(Color.RED);
 
-		String scoreTxt = "SCORES:  " + data.getScore();
-		String levelTxt = "LEVEL:  " + data.getGameLevel();
-		String lifeTxt = "LIFE:  " + data.getGameLife();
+		String scoreTxt = "SCORES:  " + 0;//data.getScore();
+		String levelTxt = "LEVEL:  " + 0;//data.getGameLevel();
+		String lifeTxt = "LIFE:  " + 0;//data.getGameLife();
 
 		int scoreTxtWidth = g.getFontMetrics().stringWidth(scoreTxt);
 		int lifeTxtWidth = g.getFontMetrics().stringWidth(lifeTxt);
@@ -118,10 +130,10 @@ public class PlayState extends GameState {
 
 		g.setFont(new Font("Serif", Font.BOLD, 28) );
 
-		g.drawString(levelTxt, (Game.WIDTH/Maze.MAZE_COL) , 515);
+		g.drawString(levelTxt, (Game.WIDTH/ GameConsts.MAZE_COL) , 515);
 		g.drawString(scoreTxt, (Game.WIDTH/2) -scoreTxtWidth , 515);
 
-		g.drawString(lifeTxt, (int)Maze.BLOCK_WIDTH*Maze.MAZE_COL - lifeTxtWidth*3 , 515);
+		g.drawString(lifeTxt, (int) GameConsts.BLOCK_WIDTH * GameConsts.MAZE_COL - lifeTxtWidth*3 , 515);
 
 	}
 

@@ -1,3 +1,5 @@
+/*
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -42,7 +44,7 @@ public class GameData {
         ghostNum = NUMBER_OF_GHOST;
         ghostCollision = 0;
         gameLevel = 0;
-        pacman = new Pacman(DEFAULT_SPEED, PACMAN_X, PACMAN_Y);
+        //pacman = new Pacman(DEFAULT_SPEED, PACMAN_X, PACMAN_Y);
         maze = new Maze();
         coins = new Vector<Coin>();
         initGhosts();
@@ -120,7 +122,7 @@ public class GameData {
         if (index < coins.size())
             return coins.get(index);
 
-        Coin emptyCoin = new Coin(0, 0, 0);
+        Coin emptyCoin = new Coin(0, new p0, 0);
         emptyCoin.setDimension(0);
         return emptyCoin;
     }
@@ -142,9 +144,9 @@ public class GameData {
 
             // add 3 CrazyGhost and 3 Ghost
             if (i > 2)
-                ghostList.add(new CrazyGhost(DEFAULT_SPEED, x, y));
+                ghostList.add(new CrazyGhost(DEFAULT_SPEED, new Point(x, y)));
             else
-                ghostList.add(new Ghost(DEFAULT_SPEED, x, y));
+                ghostList.add(new Ghost(DEFAULT_SPEED, new Point(x, y)));
 
             x += Maze.BLOCK_WIDTH;
         }
@@ -164,7 +166,7 @@ public class GameData {
         if (index < ghostList.size())
             return ghostList.get(index);
 
-        Ghost emptyGhost = new Ghost(0, 0, 0);
+        Ghost emptyGhost = new Ghost(0, new Point(0, 0));
         return emptyGhost;
     }
-}
+}*/

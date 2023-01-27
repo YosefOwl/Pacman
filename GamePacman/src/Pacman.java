@@ -1,44 +1,78 @@
-import com.sun.tools.jconsole.JConsoleContext;
-
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pacman extends Character{
+public class Pacman extends DynamicCharacter{
 	private List<Coin> coins = new ArrayList<>();
-	public Pacman(float speed, float x, float y) {
-		super(speed, x, y);
+	public Pacman(float speed, Point position) {
+		super(speed, position);
+		this.setActive(true);
+		this.setStereotip(Stereotip.ePacman);
+
 	}
 	
 	public void move(long deltaTime) {
 
-		float lastX = x;
-		float lastY = y;
-		x = x + speedX*deltaTime;
-		y = y + speedY*deltaTime;
-		
-//		if(Maze.collision(this.getDimension() , this.getDimension(), x, y)==false) {
-//			x=lastx;
-//			y=lasty;
-//		}
-		
-		if (x < 0)
-			x = 0;
+		this.setLastPosition(new Point(position.x, position.y));
+		position.x = (int)(Math.ceil(position.x + speedX*deltaTime));
+		position.y = (int)(Math.ceil(position.y + speedY*deltaTime));
 
-		if (x > Game.WIDTH - dimension)
-			x = Game.WIDTH - dimension;
+		if (position.x < 0)
+			position.x = 0;
 
-		if (y < 0)
-			y = 0;
+		if (position.x > Game.WIDTH - dimension.width)
+			position.x = Game.WIDTH - dimension.width;
 
-		if (y > Game.HEIGHT - dimension)
-			y = Game.HEIGHT - dimension;
+		if (position.y < 0)
+			position.y = 0;
+
+		if (position.y > Game.HEIGHT - dimension.height)
+			position.y = Game.HEIGHT - dimension.height;
+
+		System.out.println("pacman last position : " + this.getLastPosition().toString());
+		System.out.println("pacman new position : " + this.getPosition().toString());
+
 	}
 
+	public void changeDirection(int direction) {
+
+		if (direction == GameConsts.RIGHT){
+			speedX = speed;
+			speedY = 0;
+		}
+		else if (direction == GameConsts.LEFT){
+			speedX = -speed;
+			speedY = 0;
+		}
+		else if (direction == GameConsts.UP){
+			speedY = -speed;
+			speedX = 0;
+		}
+		else if (direction == GameConsts.DOWN){
+			speedY = speed;
+			speedX = 0;
+		}
+	}
 	@Override
 	public void onCollisionEnter(ICollisional other) {
 		try{
+			if(other.getCharacter().getStereotip().equals(Stereotip.eWall))
+			{
+				if(this.getLastPosition().x == this.getPosition().x){
+					this.setSpeedY(0);
+				}
+				if(this.getLastPosition().y == this.getPosition().y){
+					this.setSpeedX(0);
+				}
+				this.setPosition(this.getLastPosition());
+
+			}
+			else {
+				this.setSpeed(GameConsts.PACMAN_SPEED);
+			}
+
 			if(other.getCharacter().getStereotip().equals(Stereotip.eCoin))
 			{
 				coins.add((Coin) other.getCharacter());
@@ -62,12 +96,19 @@ public class Pacman extends Character{
 	}
 
 	@Override
-	public Shape getCollider() {
-		return null;
+	public Point getPosition() {
+		return position;
 	}
 
 	@Override
-	public Point getPosition() {
-		return new Point((int)x,(int)y);
+	public Shape getCollider() {
+		return new Rectangle(
+				this.getPosition(),
+				new Dimension(this.dimension.width + 2,this.dimension.height + 2));
+	}
+
+	@Override
+	public boolean HasBound() {
+		return true;
 	}
 }

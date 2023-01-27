@@ -1,13 +1,8 @@
-import java.awt.Color;
-import java.awt.Graphics;
-import java.util.Arrays;
+import java.awt.*;
+import java.util.Optional;
 import javax.swing.JPanel;
 
 public class Maze extends JPanel {
-	static final int MAZE_ROW = 15;
-	static final int MAZE_COL = 26;
-	static final float BLOCK_WIDTH = Game.WIDTH / (float) MAZE_COL;
-	static final float BLOCK_HEIGHT = Game.HEIGHT / (float) MAZE_ROW;
 	private static MazeData	[][] mazeData;
 
 	public Maze() {
@@ -41,41 +36,48 @@ public class Maze extends JPanel {
 
 				this.mazeData[i][j] = new MazeData();
 				if (mazeSketch[i][j] == 1) {
+					this.mazeData[i][j]
+							.getCollisionals()
+							.add(new MazeWall(new Point((int)(j * GameConsts.BLOCK_WIDTH),(int)(i * GameConsts.BLOCK_HEIGHT))));
 					this.mazeData[i][j].setWall(true);
 				}else {
-					float yCoin = (i * BLOCK_HEIGHT) + (BLOCK_HEIGHT / 2) - (Coin.DIMENSION / 1f);
-					float xCoin = (j * BLOCK_WIDTH)  + (BLOCK_WIDTH / 2) - (Coin.DIMENSION / 1f);
-					Coin coin = new Coin(0, xCoin, yCoin);
-					this.mazeData[i][j].getCharacters().add(coin);
+					int yCoin = (int)((i * GameConsts.BLOCK_HEIGHT) + (GameConsts.BLOCK_HEIGHT / 2) - (Coin.DIMENSION / 1f));
+					int xCoin = (int)((j * GameConsts.BLOCK_WIDTH)  + (GameConsts.BLOCK_WIDTH / 2) - (Coin.DIMENSION / 1f));
+					Coin coin = new Coin(0,new Point(xCoin, yCoin));
+					this.mazeData[i][j].getCollisionals().add(coin);
 				}
 			}
 		}
 	}
 
-	public void render(Graphics g) {
+	public void render(Graphics graphics) {
 		var maze = getMap();
+
 		for (int row = 0; row < mazeData.length; row++) {
 			for (int col = 0; col < mazeData[row].length; col++) {
 				if (mazeData[row][col].isWall()) {
-					g.setColor(Color.BLACK);
-					g.fillRect(col * (int) (BLOCK_WIDTH), row * (int) (BLOCK_HEIGHT), (int) (BLOCK_WIDTH),
-							(int) (BLOCK_HEIGHT));
-					g.setColor(Color.WHITE);
-					g.drawRect(col * (int) (BLOCK_WIDTH), row * (int) (BLOCK_HEIGHT), (int) (BLOCK_WIDTH),
-							(int) (BLOCK_HEIGHT));
+					drawWall(graphics, row, col);
+
+					var wall = mazeData[row][col].getCollisionals()
+							.stream()
+							.filter(c -> c.getCharacter().getStereotip().equals(Stereotip.eWall))
+							.findFirst()
+							.get();
+
+					graphics.setColor(Color.GREEN);
+					graphics.drawRect(wall.getCollider().getBounds().x,
+							wall.getCollider().getBounds().y,
+							wall.getCollider().getBounds().width,
+							wall.getCollider().getBounds().height
+					);
+
 				}
 				else {
-					var optionalCoin = mazeData[row][col]
-							.getCharacters()
-							.stream()
-							.filter(c -> c.isActive() && c.getStereotip().equals(Stereotip.eCoin))
-							.findFirst();
+					Optional<ICollisional> optionalCoin = getCoinIfExist(mazeData[row][col]);
 					if(!optionalCoin.isEmpty())
 					{
-						var coin = optionalCoin.get();
-						g.setColor(Color.PINK);
-						g.drawOval(coin.getPosition().x,coin.getPosition().y, coin.dimension, coin.dimension);
-						g.fillOval(coin.getPosition().x,coin.getPosition().y, coin.dimension, coin.dimension);
+						var coin = optionalCoin.get().getCharacter();
+						drawCoin(graphics, coin);
 					}
 
 				}
@@ -83,18 +85,59 @@ public class Maze extends JPanel {
 		}
 	}
 
+	private Optional<ICollisional> getCoinIfExist(MazeData mazeData) {
+		var optionalCoin = mazeData
+				.getCollisionals()
+				.stream()
+				.filter(c -> c.getCharacter() != null &&
+							 c.getCharacter().isActive() &&
+							 c.getCharacter().getStereotip().equals(Stereotip.eCoin))
+				.findFirst();
+		return optionalCoin;
+	}
+
+	private void drawCoin(Graphics g, Character coin) {
+		g.setColor(Color.PINK);
+		g.drawOval(coin.getPosition().x, coin.getPosition().y, coin.dimension.width, coin.dimension.height);
+		g.fillOval(coin.getPosition().x, coin.getPosition().y, coin.dimension.width, coin.dimension.height);
+
+		g.setColor(Color.ORANGE);
+		g.drawRect(coin.getCollider().getBounds().x,
+					coin.getCollider().getBounds().y,
+				coin.getCollider().getBounds().width,
+				coin.getCollider().getBounds().height);
+
+	}
+
+	private void drawWall(Graphics g, int row, int col) {
+		g.setColor(Color.BLACK);
+		g.fillRect(col * (int) (GameConsts.BLOCK_WIDTH), row * (int) (GameConsts.BLOCK_HEIGHT),
+				(int) (GameConsts.BLOCK_WIDTH), (int) (GameConsts.BLOCK_HEIGHT));
+		g.setColor(Color.WHITE);
+		g.drawRect(col * (int) (GameConsts.BLOCK_WIDTH), row * (int) (GameConsts.BLOCK_HEIGHT),
+				(int) (GameConsts.BLOCK_WIDTH),	(int) (GameConsts.BLOCK_HEIGHT));
+
+
+	}
+
 	public MazeData[][] getMap() {
 		return mazeData;
 	}
 
-	public void setCharacterInPosition(Character character){
+	public MazeData getMazeDataAtPosition (Point position) {
+		return mazeData[position.x][position.y];
+	}
 
-		int col = character.getPosition().x / ((int)BLOCK_WIDTH);
-		int row = character.getPosition().y / ((int)BLOCK_HEIGHT);
 
-		if(!mazeData[row][col].getCharacters().contains(character)) {
+
+	public void setCharacterInPosition(ICollisional character){
+
+		int col = character.getPosition().x / ((int) GameConsts.BLOCK_WIDTH);
+		int row = character.getPosition().y / ((int) GameConsts.BLOCK_HEIGHT);
+
+		if(!mazeData[row][col].getCollisionals().contains(character)) {
 			mazeData[row][col]
-					.getCharacters()
+					.getCollisionals()
 					.add(character);
 		}
 

@@ -1,19 +1,17 @@
+import java.awt.*;
 import java.util.Random;
 
 public class CrazyGhost extends Ghost {
 
-    public CrazyGhost(float speed, float x, float y) {
-        super(speed, x, y);
+    public CrazyGhost(float speed, Point position) {
+        super(speed, position);
     }
 
     @Override
     public void move(long deltaTime) {
 
-        float lastX = x;
-        float lastY = y;
-
-        x = x + speedX*deltaTime;
-        y = y + speedY*deltaTime;
+        position.x = (int)(position.x + speedX*deltaTime);
+        position.y = (int)(position.y + speedY*deltaTime);
 
         Random rand = new Random();
 

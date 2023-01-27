@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class MazeData {
-    private ArrayList<Character> characters = new ArrayList<>();
+    private ArrayList<ICollisional> collisionals = new ArrayList<>();
     private Color color;
     private boolean isWall;
 
@@ -15,11 +15,11 @@ public class MazeData {
         isWall = wall;
     }
 
-    public ArrayList<Character> getCharacters() {
-        return characters;
+    public ArrayList<ICollisional> getCollisionals() {
+        return collisionals;
     }
-    public void setCharacters(ArrayList<Character> characters) {
-        this.characters = characters;
+    public void setCollisionals(ArrayList<ICollisional> collisionals) {
+        this.collisionals = collisionals;
     }
 
     public Color getColor() {
