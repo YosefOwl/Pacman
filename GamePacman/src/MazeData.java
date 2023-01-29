@@ -2,7 +2,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class MazeData {
-    private ArrayList<ICollisional> collisionals = new ArrayList<>();
+    private ArrayList<ICollisional> collisional = new ArrayList<>();
     private Color color;
     private boolean isWall;
 
@@ -14,11 +14,11 @@ public class MazeData {
         isWall = wall;
     }
 
-    public ArrayList<ICollisional> getCollisionals() {
-        return collisionals;
+    public ArrayList<ICollisional> getCollisional() {
+        return collisional;
     }
-    public void setCollisionals(ArrayList<ICollisional> collisionals) {
-        this.collisionals = collisionals;
+    public void setCollisional(ArrayList<ICollisional> collisional) {
+        this.collisional = collisional;
     }
 
     public Color getColor() {

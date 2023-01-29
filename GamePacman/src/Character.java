@@ -6,7 +6,7 @@ public abstract class Character implements ICollisional {
 	protected boolean isActive;
 	protected Stereotype stereotype;
 	protected Dimension dimension;
-	protected int direction;
+
 
 	public Character(int x, int y) {
 
@@ -43,16 +43,12 @@ public abstract class Character implements ICollisional {
 		this.position = position;
 	}
 
-	public int getDirection() {
-		return direction;
-	}
-
-	public void setDirection(int direction) {
-		this.direction = direction;
-	}
-
 	public void translatePosition(int dx, int dy) {
 		position.translate(dx, dy);
+	}
+
+	public void draw(Graphics g) {
+
 	}
 
 	@Override
@@ -60,5 +56,5 @@ public abstract class Character implements ICollisional {
 
 	@Override
 	public abstract Point getPosition(); // TODO
-	
+
 }

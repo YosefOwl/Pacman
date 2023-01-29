@@ -1,94 +1,93 @@
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Pacman extends DynamicCharacter {
 	private List<Coin> coins = new ArrayList<>();
-	private long nextMoveCounterX = 0;
-	private long nextMoveCounterY = 0;
-	private int dx = 0;
-	private int dy = 0;
 
 	public Pacman(float speed, int x, int y) {
 
 		super(speed, x, y);
 		setSpeed(speed);
-		setDimension(new Dimension(GameConsts.PACMAN_D, GameConsts.PACMAN_D));
+		setActive(true);
 		setStereotype(Stereotype.ePacman);
+
+		setDimension(new Dimension(GameConsts.PACMAN_D, GameConsts.PACMAN_D));
+		lastPosition = new Point(getPosition());
+		setDirection(GameConsts.STOP);
+		lastDirection = direction;
 	}
-	
+
 	public void move(long deltaTime) {
 
-		// TODO : implement identify wall
-
+		int vt = (int) (speed*deltaTime);
 		setLastPosition(new Point(this.getPosition()));
 
-		int vt = (int) (speed*deltaTime);
+		dx = 0;
+		dy = 0;
 
-		if (nextMoveCounterX > 0){
-			translatePosition(dx, dy);
-			nextMoveCounterX--;
+		if (nextMoveCounterX > 0)
+			accuracyMoveX(vt);
+		else if (nextMoveCounterY > 0)
+			accuracyMoveY(vt);
+		else if (isDirectionOnAxisX())
+			moveOnAxisX(vt);
+		else if (isDirectionOnAxisY())
+			moveOnAxisY(vt);
 
-			return;
-		}
-
-		if (nextMoveCounterY > 0){
-			translatePosition(dx, dy);
-			nextMoveCounterY--;
-			return;
-		}
-
-		if(direction == GameConsts.UP) {
-			nextMoveCounterY = GameConsts.BLOCK_HEIGHT;
-			dy = -vt;
-			dx = 0;
-			nextMoveCounterX = 0;
-		}
-		else if(direction == GameConsts.DOWN) {
-			nextMoveCounterY = GameConsts.BLOCK_HEIGHT;
-			dy = vt;
-			dx = 0;
-			nextMoveCounterX = 0;
-		}
-
-		if (direction == GameConsts.RIGHT) {
-			nextMoveCounterX = GameConsts.BLOCK_WIDTH;
-			dx = vt;
-			dy = 0;
-			nextMoveCounterY = 0;
-		}
-		else if (direction == GameConsts.LEFT) {
-			nextMoveCounterX = GameConsts.BLOCK_WIDTH;
-			dx = -vt;
-			dy = 0;
-			nextMoveCounterY = 0;
-		}
-
-		direction = 0;
+		translatePosition(dx, dy);
 	}
 
 	@Override
 	public void onCollisionEnter(ICollisional other) {
-		if(other.getCharacter().getStereotype().equals(Stereotype.eWall)) {
-			nextMoveCounterX = 0;
-			nextMoveCounterY = 0;
-			this.setPosition(this.getLastPosition());
-		}
 
-		if(other.getCharacter().getStereotype().equals(Stereotype.eCoin)) {
+		Stereotype otherStereotype = other.getCharacter().getStereotype();
+
+		if (otherStereotype.equals(Stereotype.eWall))
+			handWallCollision();
+
+		if (otherStereotype.equals(Stereotype.eCoin))
 			coins.add((Coin) other.getCharacter());
-			return;
-		}
 
-		if(other.getCharacter().getStereotype().equals(Stereotype.eGhost)) {
-
-			System.out.println("Crash ");
-			this.setActive(false);
+		if (otherStereotype.equals(Stereotype.eGhost))
+			handGhostCollision(other);
 			//TODO: set state "gameOver"
+	}
+
+	private void handGhostCollision(ICollisional other) {
+
+//		Point pOther = other.getPosition();
+//		int dirOther = other.g
+//		this.setActive(false);
+		//checkDirectionCollision();
+
+		// Sticky
+
+		// change color
+
+		//
+
+		// life
+	}
+
+	private void handWallCollision() {
+
+		if (position.y == lastPosition.y && position.x == lastPosition.x)
+			return;
+
+		if (position.y != lastPosition.y && position.x != lastPosition.x) {
+			nextMoveCounterY = 0;
+			nextMoveCounterX = 0;
 		}
 
+		if (position.y != lastPosition.y)
+			nextMoveCounterY = 0;
+
+		if (position.x != lastPosition.x)
+			nextMoveCounterX = 0;
+
+		direction = GameConsts.STOP;
+		setPosition(new Point(this.getLastPosition()));
 	}
 
 	@Override
@@ -98,14 +97,35 @@ public class Pacman extends DynamicCharacter {
 
 	@Override
 	public Shape getCollider() {
-		Shape shape = new Rectangle(
-				new Point(this.getPosition().x + this.dimension.width/2 - GameConsts.BLOCK_WIDTH/2 + 1, this.getPosition().y + dimension.height/2 - GameConsts.BLOCK_HEIGHT/2 + 1),
-				new Dimension(GameConsts.BLOCK_WIDTH - 2,GameConsts.BLOCK_HEIGHT - 2) );
-		return shape;
+
+		int x = position.x;
+		int y = position.y;
+		int dw = dimension.width / 2;
+		int dh = dimension.height / 2;
+
+		int relativeX = x + dw - (GameConsts.BLOCK_WIDTH / 2) + 1;
+		int relativeY = y + dh - (GameConsts.BLOCK_HEIGHT / 2) + 1;
+
+		int dimX = GameConsts.BLOCK_WIDTH  - 2;
+		int dimY = GameConsts.BLOCK_HEIGHT - 2;
+
+		return new Rectangle( new Point(relativeX, relativeY), new Dimension(dimX, dimY) );
 	}
 
 	@Override
 	public Point getPosition() {
 		return position;
+	}
+
+	public int getCoinsAccount() {
+		return coins.size();
+	}
+
+	public void draw(Graphics g) {
+
+		g.setColor(Color.YELLOW);
+
+		g.drawRect(position.x, position.y, dimension.width, dimension.height);
+		g.fillRect(position.x, position.y, dimension.width, dimension.height);
 	}
 }

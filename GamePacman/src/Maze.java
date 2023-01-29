@@ -37,28 +37,28 @@ public class Maze extends JPanel {
 				this.mazeData[i][j] = new MazeData();
 				if (mazeSketch[i][j] == 1) {
 					this.mazeData[i][j]
-							.getCollisionals()
-							.add(new MazeWall( (int)(j * GameConsts.BLOCK_WIDTH),(int)(i * GameConsts.BLOCK_HEIGHT) ) );
+							.getCollisional()
+							.add(new MazeWall( j * GameConsts.BLOCK_WIDTH,i * GameConsts.BLOCK_HEIGHT) );
 					this.mazeData[i][j].setWall(true);
-				}else {
-					int yCoin = (int)((i * GameConsts.BLOCK_HEIGHT) + (GameConsts.BLOCK_HEIGHT / 2) - (Coin.DIMENSION / 1f));
-					int xCoin = (int)((j * GameConsts.BLOCK_WIDTH)  + (GameConsts.BLOCK_WIDTH / 2) - (Coin.DIMENSION / 1f));
+				}
+				else {
+					int yCoin = ( (i * GameConsts.BLOCK_HEIGHT) + (GameConsts.BLOCK_HEIGHT / 2) - Coin.DIMENSION );
+					int xCoin = ( (j * GameConsts.BLOCK_WIDTH)  + (GameConsts.BLOCK_WIDTH / 2) - Coin.DIMENSION );
 					Coin coin = new Coin(xCoin, yCoin);
-					this.mazeData[i][j].getCollisionals().add(coin);
+					this.mazeData[i][j].getCollisional().add(coin);
 				}
 			}
 		}
 	}
 
-	public void render(Graphics graphics) {
-		var maze = getMap(); // TODO
+	public void draw(Graphics graphics) {
 
 		for (int row = 0; row < mazeData.length; row++) {
 			for (int col = 0; col < mazeData[row].length; col++) {
 				if (mazeData[row][col].isWall()) {
 					drawWall(graphics, row, col);
 
-					var wall = mazeData[row][col].getCollisionals()
+					var wall = mazeData[row][col].getCollisional()
 							.stream()
 							.filter(c -> c.getCharacter().getStereotype().equals(Stereotype.eWall))
 							.findFirst()
@@ -68,18 +68,15 @@ public class Maze extends JPanel {
 					graphics.drawRect(wall.getCollider().getBounds().x,
 							wall.getCollider().getBounds().y,
 							wall.getCollider().getBounds().width,
-							wall.getCollider().getBounds().height
-					);
-
+							wall.getCollider().getBounds().height);
 				}
 				else {
-					Optional<ICollisional> optionalCoin = getCoinIfExist(mazeData[row][col]);
-					if(!optionalCoin.isEmpty())
-					{
-						var coin = optionalCoin.get().getCharacter();
-						drawCoin(graphics, coin);
-					}
 
+					Optional<ICollisional> optionalCoin = getCoinIfExist(mazeData[row][col]);
+					if(!optionalCoin.isEmpty()) {
+						var coin = optionalCoin.get().getCharacter();
+						coin.draw(graphics);
+					}
 				}
 			}
 		}
@@ -87,7 +84,7 @@ public class Maze extends JPanel {
 
 	private Optional<ICollisional> getCoinIfExist(MazeData mazeData) {
 		var optionalCoin = mazeData
-				.getCollisionals()
+				.getCollisional()
 				.stream()
 				.filter(c -> c.getCharacter() != null &&
 							 c.getCharacter().isActive() &&
@@ -96,28 +93,15 @@ public class Maze extends JPanel {
 		return optionalCoin;
 	}
 
-	private void drawCoin(Graphics g, Character coin) {
-		g.setColor(Color.PINK);
-		g.drawOval(coin.getPosition().x, coin.getPosition().y, coin.dimension.width, coin.dimension.height);
-		g.fillOval(coin.getPosition().x, coin.getPosition().y, coin.dimension.width, coin.dimension.height);
-
-		g.setColor(Color.ORANGE);
-		g.drawRect(coin.getCollider().getBounds().x,
-					coin.getCollider().getBounds().y,
-				coin.getCollider().getBounds().width,
-				coin.getCollider().getBounds().height);
-
-	}
-
 	private void drawWall(Graphics g, int row, int col) {
 		g.setColor(Color.BLACK);
-		g.fillRect(col * (int) (GameConsts.BLOCK_WIDTH), row * (int) (GameConsts.BLOCK_HEIGHT),
-				(int) (GameConsts.BLOCK_WIDTH), (int) (GameConsts.BLOCK_HEIGHT));
+
+		g.fillRect(col *  GameConsts.BLOCK_WIDTH, row * GameConsts.BLOCK_HEIGHT,
+				GameConsts.BLOCK_WIDTH, GameConsts.BLOCK_HEIGHT);
+
 		g.setColor(Color.WHITE);
-		g.drawRect(col * (int) (GameConsts.BLOCK_WIDTH), row * (int) (GameConsts.BLOCK_HEIGHT),
-				(int) (GameConsts.BLOCK_WIDTH),	(int) (GameConsts.BLOCK_HEIGHT));
-
-
+		g.drawRect(col * GameConsts.BLOCK_WIDTH, row * GameConsts.BLOCK_HEIGHT,
+				GameConsts.BLOCK_WIDTH,	GameConsts.BLOCK_HEIGHT);
 	}
 
 	public MazeData[][] getMap() {
@@ -129,7 +113,6 @@ public class Maze extends JPanel {
 	}
 
 
-
 	public void setCharacterInPosition(DynamicCharacter character){
 
 		int col = character.getPosition().x / GameConsts.BLOCK_WIDTH;
@@ -138,14 +121,14 @@ public class Maze extends JPanel {
 		int lastCol = character.getLastPosition().x / GameConsts.BLOCK_WIDTH;
 		int lastRow = character.getLastPosition().y / GameConsts.BLOCK_HEIGHT;
 
-		if(!mazeData[row][col].getCollisionals().contains(character)) {
+		if(!mazeData[row][col].getCollisional().contains(character)) {
 
 			mazeData[row][col]
-					.getCollisionals()
+					.getCollisional()
 					.add(character);
 
 			mazeData[lastRow][lastCol]
-					.getCollisionals()
+					.getCollisional()
 					.remove(character);
 		}
 

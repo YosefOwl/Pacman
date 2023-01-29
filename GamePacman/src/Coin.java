@@ -35,4 +35,12 @@ public class Coin extends Character {
 				new Dimension(DIMENSION + 2,DIMENSION + 2));
 	}
 
+	public void draw(Graphics g) {
+
+		g.setColor(Color.ORANGE);
+
+		g.drawOval(position.x, position.y, dimension.width, dimension.height);
+		g.fillOval(position.x, position.y, dimension.width, dimension.height);
+	}
+
 }

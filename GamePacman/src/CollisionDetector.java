@@ -175,7 +175,7 @@ public class CollisionDetector {
     }
 
     private List<ICollisional> getCollisionalsInPosition(Point pCharacter) {
-        return maze.getMazeDataAtPosition(pCharacter).getCollisionals()
+        return maze.getMazeDataAtPosition(pCharacter).getCollisional()
                 .stream()
                 .filter(c -> c.getCharacter().isActive)
                 .collect(Collectors.toList());
