@@ -1,16 +1,19 @@
+import java.awt.*;
+
 public final record GameConsts() {
 
     // Maze
     static final int MAZE_ROW = 15;
     static final int MAZE_COL = 26;
-    static final int BLOCK_WIDTH = Game.WIDTH/MAZE_COL; // TODO: type int?
+    static final int BLOCK_WIDTH = Game.WIDTH/MAZE_COL;
     static final int BLOCK_HEIGHT = Game.HEIGHT/MAZE_ROW;
 
     // Directions
+    static final int STOP = 0;
     static final int UP = 1;
-    static final int RIGHT = 2;
-    static final int DOWN = -1;
-    static final int LEFT = -2;
+    static final int DOWN = 2;
+    static final int RIGHT = 3;
+    static final int LEFT = 4;
     static final float DEFAULT_SPEED = 0.1f;
 
 
@@ -29,5 +32,7 @@ public final record GameConsts() {
     static final int START_COL_G = 7;
     static final int GHOST_X = (BLOCK_WIDTH*START_ROW_G + (BLOCK_WIDTH - GHOST_D)/2);
     static final int GHOST_Y = (BLOCK_HEIGHT*START_COL_G + (BLOCK_HEIGHT - GHOST_D)/2);
+
+    static final Color GHOST_COLOR = Color.ORANGE;
 
 }

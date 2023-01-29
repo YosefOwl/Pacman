@@ -23,12 +23,12 @@ public class WelcomeState extends GameState {
 	}
 
 	public void render(GameFrameBuffer aGameFrameBuffer) {
+
 		Graphics g = aGameFrameBuffer.graphics();
 		String text = "PRESS ANY KEY TO PLAY";
 		int textWidth = g.getFontMetrics().stringWidth(text);
 		g.setColor(Color.white);
 		g.drawString(text, (aGameFrameBuffer.getWidth()-textWidth)/2, aGameFrameBuffer.getHeight()/2);
-
 	}
 
 	public Object memento() {

@@ -5,6 +5,7 @@ import java.util.Vector;
 public class GameData {
 
     static final int LIFE = 3;
+
     private static GameData gameDataInstance;
 
     private int gameLevel;
@@ -12,14 +13,12 @@ public class GameData {
     private int gameLife;
 
     private GameData() {
-        // TODO values shall be final
         score = 0;
         gameLife = LIFE;
         gameLevel = 0;
     }
 
     public static GameData getInstance() {
-
         if (gameDataInstance == null)
             gameDataInstance = new GameData();
         return gameDataInstance;

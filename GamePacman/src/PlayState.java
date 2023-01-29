@@ -2,7 +2,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public class PlayState extends GameState {
 
@@ -14,18 +13,14 @@ public class PlayState extends GameState {
 	
 	private List<DynamicCharacter> dynamicCharacters = new ArrayList<>();
 
-	private GameData data;
+	private GameData gameData;
 
 	public PlayState() {
-		data = GameData.getInstance();
-		ghosts = new ArrayList<>();
 
-		int x = GameConsts.GHOST_X;
+		gameData = GameData.getInstance();
 
-		for (int i = 0; i < GameConsts.NUMBER_OF_GHOST ; i++) {
-			ghosts.add(new Ghost(GameConsts.DEFAULT_SPEED, x, GameConsts.GHOST_Y));
-			x += GameConsts.BLOCK_WIDTH;
-		}
+		initGhosts(GameConsts.NUMBER_OF_GHOST);
+
 		pacman = new Pacman(GameConsts.DEFAULT_SPEED, GameConsts.PACMAN_X, GameConsts.PACMAN_Y);
 		maze = new Maze();
 
@@ -34,11 +29,23 @@ public class PlayState extends GameState {
 		dynamicCharacters.addAll(ghosts);
 	}
 
+	// TODO not here
+	private void initGhosts(int ghostNum) {
+
+		ghosts = new ArrayList<>();
+
+		int x = GameConsts.GHOST_X;
+		for (int i = 0; i < ghostNum ; i++) {
+			ghosts.add(new Ghost(GameConsts.DEFAULT_SPEED, x, GameConsts.GHOST_Y));
+			x += GameConsts.BLOCK_WIDTH;
+		}
+	}
+
 	public void enter(Object memento) {
 		active = true;
 	}
 
-	public void processKeyPressed (int aKeyCode) {
+	public void processKeyPressed(int aKeyCode) {
 
 		if (aKeyCode == KeyEvent.VK_ESCAPE)
 			System.exit(0);
@@ -61,22 +68,23 @@ public class PlayState extends GameState {
 	
 	public void update(long deltaTime) {
 
+		var collisions = collisionDetector.DetectCollisions(dynamicCharacters);
+
+		maze.setCharacterInPosition(pacman);
+		collisionDetector.ExecuteOnCollisionEnters(collisions);
+
 		pacman.move(deltaTime);
 		maze.setCharacterInPosition(pacman);
+
+		collisionDetector.ExecuteOnCollisionEnters(collisions);
 
 		for (Ghost ghost : ghosts) {
 			ghost.move(deltaTime);
 			maze.setCharacterInPosition(ghost);
 		}
-
-		var collisions = collisionDetector.DetectCollisions(dynamicCharacters);
 		collisionDetector.ExecuteOnCollisionEnters(collisions);
-//		ghosts.stream()
-//				.forEach(ghost -> {
-//					if(ghost.isActive){
-//						ghost.move(deltaTime);
-//					}
-//				});
+
+		gameData.setScore(pacman.getCoinsAccount());
 	}
 
 	public boolean isActive() { return active; }
@@ -88,60 +96,23 @@ public class PlayState extends GameState {
 	public void render(GameFrameBuffer aGameFrameBuffer) {
 		
 		Graphics g = aGameFrameBuffer.graphics();
-		maze.render(g);
-		drawPacman(g);
-		drawGhosts(g);
+
 		drawStatusBar(g);
-	}
 
-	// TODO may need to move to GameData class or Pacman class
-	private void drawPacman(Graphics g) {
-		g.setColor(Color.YELLOW);
+		maze.draw(g);
+		pacman.draw(g);
 
-		int x , y, dw,dh;
+		for (Ghost ghost : ghosts)
+			ghost.draw(g);
 
-		x = pacman.position.x;
-		y = pacman.position.y;
-		dw = pacman.getDimension().width;
-		dh = pacman.getDimension().height;
-
-		g.drawRect(x, y, dw, dh);
-		g.fillRect(x, y, dw, dh);
-
-		g.setColor(Color.CYAN);
-
-		g.drawRect(pacman.getCollider().getBounds().x,
-				pacman.getCollider().getBounds().y,
-				pacman.getCollider().getBounds().width,
-				pacman.getCollider().getBounds().height
-				);
-	}
-
-	// TODO may need to move to GameData class or Pacman class
-
-	public void drawGhosts(Graphics g) {
-		g.setColor(Color.GREEN);
-
-		for (Ghost ghost : ghosts) {
-
-			int x , y, dw,dh;
-			
-			x = ghost.position.x;
-			y = ghost.position.y;
-			dw = ghost.getDimension().width;
-			dh = ghost.getDimension().height;
-
-			g.drawRect(x, y, dw, dh);
-			g.fillRect(x, y, dw, dh);
-		}
 	}
 
 	public void drawStatusBar(Graphics g) {
 		g.setColor(Color.RED);
 
-		String scoreTxt = "SCORES:  " + data.getScore();
-		String levelTxt = "LEVEL:  " + data.getGameLevel();
-		String lifeTxt = "LIFE:  " + data.getGameLife();
+		String scoreTxt = "SCORES:  " + gameData.getScore();
+		String levelTxt = "LEVEL:  " + gameData.getGameLevel();
+		String lifeTxt = "LIFE:  " + gameData.getGameLife();
 
 		int scoreTxtWidth = g.getFontMetrics().stringWidth(scoreTxt);
 		int lifeTxtWidth = g.getFontMetrics().stringWidth(lifeTxt);
