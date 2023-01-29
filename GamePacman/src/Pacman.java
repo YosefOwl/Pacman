@@ -50,24 +50,28 @@ public class Pacman extends DynamicCharacter {
 			coins.add((Coin) other.getCharacter());
 
 		if (otherStereotype.equals(Stereotype.eGhost))
-			handGhostCollision(other);
+			handleGhostCollision(other);
 			//TODO: set state "gameOver"
 	}
 
-	private void handGhostCollision(ICollisional other) {
+	private void handleGhostCollision(ICollisional other) {
 
-//		Point pOther = other.getPosition();
-//		int dirOther = other.g
-//		this.setActive(false);
-		//checkDirectionCollision();
+		Point pOther = other.getPosition();
+		int directionOther = ((DynamicCharacter)other).getLastDirection();
 
+		if (directionOther == lastDirection) {
+			System.out.println("Behind you");
+
+		}
+
+		this.setActive(false);
+
+		// checkDirectionCollision();
 		// Sticky
-
 		// change color
-
-		//
-
+		// freeze with some special coin
 		// life
+		// פסילות
 	}
 
 	private void handWallCollision() {
@@ -115,6 +119,10 @@ public class Pacman extends DynamicCharacter {
 	@Override
 	public Point getPosition() {
 		return position;
+	}
+
+	public void setDirection(int direction){
+		this.direction = direction;
 	}
 
 	public int getCoinsAccount() {

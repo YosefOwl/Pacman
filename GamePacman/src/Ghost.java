@@ -47,7 +47,7 @@ public class Ghost extends DynamicCharacter {
 		translatePosition(dx, dy);
 
 		time += deltaTime;
-		if (time > 1000) {
+		if (time > 1000 && (nextMoveCounterX == 0 || nextMoveCounterY == 0)) {
 			setMoveFlow();
 			time = 0;
 		}
