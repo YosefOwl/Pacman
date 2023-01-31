@@ -33,6 +33,5 @@ public final record GameConsts() {
     static final int GHOST_X = (BLOCK_WIDTH*START_ROW_G + (BLOCK_WIDTH - GHOST_D)/2);
     static final int GHOST_Y = (BLOCK_HEIGHT*START_COL_G + (BLOCK_HEIGHT - GHOST_D)/2);
 
-    static final Color GHOST_COLOR = Color.ORANGE;
-
+    static final int COIN_DIMENSION = 4;
 }

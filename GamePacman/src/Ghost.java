@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Ghost extends DynamicCharacter {
 
+	static final Color[] ghostColor = {Color.MAGENTA, Color.RED, Color.GREEN, Color.CYAN, Color.BLUE};
 	private long time = 0;
 	private Queue<Integer> dirQueue = new LinkedList<>();
 
@@ -22,16 +23,14 @@ public class Ghost extends DynamicCharacter {
 
 		setLastPosition(new Point(this.position));
 		lastDirection = direction;
-
+		setColor();
 	}
 
 	@Override
 	public void move(long deltaTime) {
-		super.move(deltaTime);
 
 		int vt = (int) (speed*deltaTime);
 		setLastPosition(new Point(this.getPosition()));
-
 		dx = 0;
 		dy = 0;
 
@@ -56,7 +55,6 @@ public class Ghost extends DynamicCharacter {
 	private void setMoveFlow() {
 
 		int newDirection;
-
 		newDirection = dirQueue.poll();
 		dirQueue.add(newDirection);
 
@@ -83,7 +81,6 @@ public class Ghost extends DynamicCharacter {
 				nextMoveCounterX = 0;
 
 			this.setPosition(new Point(this.getLastPosition()));
-
 			setMoveFlow();
 		}
 	}
@@ -101,11 +98,8 @@ public class Ghost extends DynamicCharacter {
 	@Override
 	public Shape getCollider() {
 
-		int dw = dimension.width / 2;
-		int dh = dimension.height / 2;
-
-		int relativeX = position.x + dw - (GameConsts.BLOCK_WIDTH / 2) + 1;
-		int relativeY = position.y + dh - (GameConsts.BLOCK_HEIGHT / 2) + 1;
+		int relativeX = position.x + dimension.width/2 - (GameConsts.BLOCK_WIDTH/2) + 1;
+		int relativeY = position.y + dimension.height/2 - (GameConsts.BLOCK_HEIGHT/2) + 1;
 
 		int dimX = GameConsts.BLOCK_WIDTH  - 2;
 		int dimY = GameConsts.BLOCK_HEIGHT - 2;
@@ -113,9 +107,14 @@ public class Ghost extends DynamicCharacter {
 		return new Rectangle( new Point(relativeX, relativeY), new Dimension(dimX, dimY) );
 	}
 
+	private void setColor() {
+		Collections.shuffle(Arrays.asList(ghostColor));
+		setColor(Arrays.stream(ghostColor).findAny().get());
+	}
+
 	public void draw(Graphics g) {
 
-		g.setColor(Color.GREEN);
+		g.setColor(this.color);
 
 		g.drawRect(position.x, position.y, dimension.width, dimension.height);
 		g.fillRect(position.x, position.y, dimension.width, dimension.height);

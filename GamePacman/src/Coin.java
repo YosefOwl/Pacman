@@ -2,18 +2,17 @@ import java.awt.*;
 
 public class Coin extends Character {
 
-	static final int DIMENSION = 4;
-	
 	public Coin(int x, int y) {
 		super(x, y);
-		setDimension(new Dimension(DIMENSION,DIMENSION));
+		setDimension(new Dimension(GameConsts.COIN_DIMENSION, GameConsts.COIN_DIMENSION));
 		setActive(true);
 		setStereotype(Stereotype.eCoin);
+		setColor(Color.ORANGE);
 	}
 
 	@Override
 	public void onCollisionEnter(ICollisional other) {
-		if(other.getCharacter().getStereotype().equals(Stereotype.ePacman)) {
+		if (other.getCharacter().getStereotype().equals(Stereotype.ePacman)) {
 			this.setActive(false);
 		}
 	}
@@ -32,12 +31,12 @@ public class Coin extends Character {
 	public Shape getCollider() {
 		return new Rectangle(
 				this.position,
-				new Dimension(DIMENSION + 2,DIMENSION + 2));
+				new Dimension(dimension.width + 2, dimension.height + 2));
 	}
 
 	public void draw(Graphics g) {
 
-		g.setColor(Color.ORANGE);
+		g.setColor(this.color);
 
 		g.drawOval(position.x, position.y, dimension.width, dimension.height);
 		g.fillOval(position.x, position.y, dimension.width, dimension.height);

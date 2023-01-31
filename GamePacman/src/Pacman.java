@@ -14,8 +14,11 @@ public class Pacman extends DynamicCharacter {
 
 		setDimension(new Dimension(GameConsts.PACMAN_D, GameConsts.PACMAN_D));
 		lastPosition = new Point(getPosition());
+
 		setDirection(GameConsts.STOP);
 		lastDirection = direction;
+
+		setColor(Color.YELLOW);
 	}
 
 	public void move(long deltaTime) {
@@ -41,15 +44,18 @@ public class Pacman extends DynamicCharacter {
 	@Override
 	public void onCollisionEnter(ICollisional other) {
 
-		Stereotype otherStereotype = other.getCharacter().getStereotype();
+		Character c = other.getCharacter();
 
-		if (otherStereotype.equals(Stereotype.eWall))
-			handWallCollision();
+		if (c.getStereotype().equals(Stereotype.eWall))
+			handleWallCollision();
 
-		if (otherStereotype.equals(Stereotype.eCoin))
-			coins.add((Coin) other.getCharacter());
+		if (c.getStereotype().equals(Stereotype.eCoin)) {
+			if (c.isActive()) {
+				coins.add( (Coin)c);
+			}
+		}
 
-		if (otherStereotype.equals(Stereotype.eGhost))
+		if (c.getStereotype().equals(Stereotype.eGhost))
 			handleGhostCollision(other);
 			//TODO: set state "gameOver"
 	}
@@ -64,17 +70,18 @@ public class Pacman extends DynamicCharacter {
 
 		}
 
-		this.setActive(false);
+		/*
+		 checkDirectionCollision();
+		 Sticky
+		 change color
+		 freeze with some special coin
+		 life
+		 פסילות
+		 */
 
-		// checkDirectionCollision();
-		// Sticky
-		// change color
-		// freeze with some special coin
-		// life
-		// פסילות
 	}
 
-	private void handWallCollision() {
+	private void handleWallCollision() {
 
 		if (position.y == lastPosition.y && position.x == lastPosition.x)
 			return;
@@ -102,13 +109,8 @@ public class Pacman extends DynamicCharacter {
 	@Override
 	public Shape getCollider() {
 
-		int x = position.x;
-		int y = position.y;
-		int dw = dimension.width / 2;
-		int dh = dimension.height / 2;
-
-		int relativeX = x + dw - (GameConsts.BLOCK_WIDTH / 2) + 1;
-		int relativeY = y + dh - (GameConsts.BLOCK_HEIGHT / 2) + 1;
+		int relativeX = position.x + (dimension.width - GameConsts.BLOCK_WIDTH)/2 + 1;
+		int relativeY = position.y + (dimension.height - GameConsts.BLOCK_HEIGHT)/2 + 1;
 
 		int dimX = GameConsts.BLOCK_WIDTH  - 2;
 		int dimY = GameConsts.BLOCK_HEIGHT - 2;
@@ -125,15 +127,15 @@ public class Pacman extends DynamicCharacter {
 		this.direction = direction;
 	}
 
-	public int getCoinsAccount() {
+	public int getCoinsSize() {
 		return coins.size();
 	}
 
 	public void draw(Graphics g) {
 
-		g.setColor(Color.YELLOW);
+		g.setColor(this.color);
 
-		g.drawRect(position.x, position.y, dimension.width, dimension.height);
-		g.fillRect(position.x, position.y, dimension.width, dimension.height);
+		g.drawOval(position.x, position.y, dimension.width, dimension.height);
+		g.fillOval(position.x, position.y, dimension.width, dimension.height);
 	}
 }

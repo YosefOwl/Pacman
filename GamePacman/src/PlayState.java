@@ -10,39 +10,72 @@ public class PlayState extends GameState {
 	private Pacman pacman;
 	private Maze maze;
 	private CollisionDetector collisionDetector;
-	
-	private List<DynamicCharacter> dynamicCharacters = new ArrayList<>();
-
+	private List<DynamicCharacter> dynamicCharacters;
 	private GameData gameData;
 
 	public PlayState() {
-
 		gameData = GameData.getInstance();
+		initGame();
+	}
 
-		initGhosts(GameConsts.NUMBER_OF_GHOST);
+	private void initGame() {
+		dynamicCharacters = new ArrayList<>();
+		ghosts = new ArrayList<>();
 
-		pacman = new Pacman(GameConsts.DEFAULT_SPEED, GameConsts.PACMAN_X, GameConsts.PACMAN_Y);
-		maze = new Maze();
-
+		maze = new Maze(gameData.getSketch());
 		collisionDetector = new CollisionDetector(maze);
+
+		initCharacter();
+
 		dynamicCharacters.add(pacman);
 		dynamicCharacters.addAll(ghosts);
 	}
 
-	// TODO not here
-	private void initGhosts(int ghostNum) {
+	private void initCharacter() {
 
-		ghosts = new ArrayList<>();
-
+		// speed of pacman and ghosts increasing  each level
+		float speed = GameConsts.DEFAULT_SPEED + (gameData.getLevel() - 1)*0.1f;
 		int x = GameConsts.GHOST_X;
-		for (int i = 0; i < ghostNum ; i++) {
-			ghosts.add(new Ghost(GameConsts.DEFAULT_SPEED, x, GameConsts.GHOST_Y));
-			x += GameConsts.BLOCK_WIDTH;
+		int y;
+
+		pacman = new Pacman(speed, GameConsts.PACMAN_X, GameConsts.PACMAN_Y);
+		maze.setCharacterInPosition(pacman);
+
+		// set ghosts position and double the ghosts each level
+		for (int i = 1 ; i <= gameData.getLevel(); i++) {
+			y = GameConsts.GHOST_Y + GameConsts.BLOCK_HEIGHT *(i - gameData.getLevel());
+			for (int j = 0; j < GameConsts.NUMBER_OF_GHOST; j++) {
+
+				Ghost ghost = new Ghost(speed, x, y);
+				ghosts.add(ghost);
+				maze.setCharacterInPosition(ghost);
+				x = x + GameConsts.BLOCK_WIDTH;
+			}
+			x = GameConsts.GHOST_X;
 		}
 	}
 
-	public void enter(Object memento) {
-		active = true;
+	public void processKeyReleased(int aKeyCode) {
+
+		int pDir = pacman.getDirection();
+
+		switch (aKeyCode) {
+			case KeyEvent.VK_RIGHT:
+				if (GameConsts.RIGHT == pDir)
+					pacman.setDirection(GameConsts.STOP);
+			case KeyEvent.VK_LEFT:
+				if (GameConsts.LEFT == pDir)
+					pacman.setDirection(GameConsts.STOP);
+			case KeyEvent.VK_DOWN:
+				if (GameConsts.DOWN == pDir)
+					pacman.setDirection(GameConsts.STOP);
+			case KeyEvent.VK_UP:
+				if (GameConsts.UP == pDir)
+					pacman.setDirection(GameConsts.STOP);
+			default:
+				// do nothing
+		}
+
 	}
 
 	public void processKeyPressed(int aKeyCode) {
@@ -53,30 +86,29 @@ public class PlayState extends GameState {
 		if (aKeyCode == KeyEvent.VK_Q)
 			active = false;
 
-		if (aKeyCode == KeyEvent.VK_UP)
-			pacman.setDirection(GameConsts.UP);
+		boolean noDirection = pacman.getDirection() == GameConsts.STOP;
 
-		if (aKeyCode == KeyEvent.VK_DOWN)
-			pacman.setDirection(GameConsts.DOWN);
+		if (aKeyCode == KeyEvent.VK_RIGHT && noDirection)
+			pacman.setDirection(GameConsts.RIGHT);
 
-		if (aKeyCode == KeyEvent.VK_LEFT)
+		if (aKeyCode == KeyEvent.VK_LEFT&& noDirection)
 			pacman.setDirection(GameConsts.LEFT);
 
-		if (aKeyCode == KeyEvent.VK_RIGHT)
-			pacman.setDirection(GameConsts.RIGHT);
+		if (aKeyCode == KeyEvent.VK_DOWN && noDirection)
+			pacman.setDirection(GameConsts.DOWN);
+
+		if (aKeyCode == KeyEvent.VK_UP && noDirection)
+			pacman.setDirection(GameConsts.UP);
 	}
-	
+
 	public void update(long deltaTime) {
 
 		var collisions = collisionDetector.DetectCollisions(dynamicCharacters);
 
-		maze.setCharacterInPosition(pacman);
 		collisionDetector.ExecuteOnCollisionEnters(collisions);
 
 		pacman.move(deltaTime);
 		maze.setCharacterInPosition(pacman);
-
-		collisionDetector.ExecuteOnCollisionEnters(collisions);
 
 		for (Ghost ghost : ghosts) {
 			ghost.move(deltaTime);
@@ -84,7 +116,46 @@ public class PlayState extends GameState {
 		}
 		collisionDetector.ExecuteOnCollisionEnters(collisions);
 
-		gameData.setScore(pacman.getCoinsAccount());
+		gameData.setScore(pacman.getCoinsSize());
+		checkLevel();
+	}
+
+	private void checkLevel() {
+		if (gameData.getScore() >= 40) { // 40 for testing, shall be maze.getCoinCount()
+			// TODO display some message or other screen
+			if (gameData.hasNextLevel()) {
+				// TODO save previous lvl data
+				resetGame();
+				initNextLevel();
+			}
+		}
+		// TODO checkGameOver
+	}
+
+	private void initNextLevel() {
+		gameData.nextLevel();
+		maze = new Maze(gameData.getSketch());
+		collisionDetector = new CollisionDetector(maze);
+		initCharacter();
+		dynamicCharacters.add(pacman);
+		dynamicCharacters.addAll(ghosts);
+	}
+
+	private void resetGame() {
+		// dataGame not rested
+		maze = null;
+		pacman = null;
+		collisionDetector = null;
+		dynamicCharacters.removeAll(this.dynamicCharacters);
+		ghosts.removeAll(this.ghosts);
+	}
+
+	public Object memento() {
+		return this;
+	}
+
+	public void enter(Object memento) {
+		active = true;
 	}
 
 	public boolean isActive() { return active; }
@@ -98,25 +169,18 @@ public class PlayState extends GameState {
 		Graphics g = aGameFrameBuffer.graphics();
 
 		drawStatusBar(g);
-
-		maze.draw(g);
-		pacman.draw(g);
-
-		for (Ghost ghost : ghosts)
-			ghost.draw(g);
-
+		maze.drawMaze(g);
 	}
 
 	public void drawStatusBar(Graphics g) {
 		g.setColor(Color.RED);
 
 		String scoreTxt = "SCORES:  " + gameData.getScore();
-		String levelTxt = "LEVEL:  " + gameData.getGameLevel();
-		String lifeTxt = "LIFE:  " + gameData.getGameLife();
+		String levelTxt = "LEVEL:  " + gameData.getLevel();
+		String lifeTxt = "LIFE:  " + gameData.getLife();
 
 		int scoreTxtWidth = g.getFontMetrics().stringWidth(scoreTxt);
 		int lifeTxtWidth = g.getFontMetrics().stringWidth(lifeTxt);
-		//int scoreTxtWidth = g.getFontMetrics().stringWidth(scoreTxt);
 
 		g.setFont(new Font("Serif", Font.BOLD, 28) );
 
@@ -124,10 +188,27 @@ public class PlayState extends GameState {
 		g.drawString( scoreTxt, Game.WIDTH/2 - scoreTxtWidth, 515 );
 		g.drawString( lifeTxt,Game.WIDTH - lifeTxtWidth*3,515 );
 
-	}
+		// for fun
+		Point pp = pacman.getPosition();
 
-	public Object memento() {
-		return this;
+		String pacmanData = "Pacman Data : ";
+
+		String pacmanPosOnMaze = "real [row, col]=" + "[" + pp.x/GameConsts.BLOCK_WIDTH + ","+ pp.y/GameConsts.BLOCK_HEIGHT + "]";
+		String pacmanPosOnMazeRound = "maze [row, col]=" + "[" + Math.round(pp.x/GameConsts.BLOCK_WIDTH) + ","+ Math.round(pp.y/GameConsts.BLOCK_HEIGHT) + "]";
+		String posMaze = pacmanPosOnMaze +", " + pacmanPosOnMazeRound;
+
+		String pacmanRealPos = "curr pos [x, y]=" + "[" + pp.x + ","+ pp.y + "]";
+		String pacmanLastMovePixels = "step [dx, dy]=" + "["+ pacman.dx + "," + pacman.dy + "]";
+		String pos = pacmanRealPos +", " + pacmanLastMovePixels;
+
+		g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20) );
+
+		g.setColor(Color.GRAY);
+
+		g.drawString( pacmanData, Game.WIDTH/GameConsts.MAZE_COL, 545 );
+
+		g.drawString( pos, Game.WIDTH/GameConsts.MAZE_COL, 570 );
+		g.drawString( posMaze,Game.WIDTH/GameConsts.MAZE_COL , 590 );
 	}
 
 }

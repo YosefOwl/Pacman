@@ -5,7 +5,7 @@ public class Game extends JFrame {
 
   static final int WIDTH = 625;
   static final int HEIGHT = 480;
-  static final int HEIGHT_S_BAR = 50;
+  static final int HEIGHT_S_BAR = 150;
   static final int TOTAL_HEIGHT = HEIGHT_S_BAR + HEIGHT;
 
   
