@@ -4,8 +4,8 @@ public abstract class DynamicCharacter extends Character {
 
     protected Point lastPosition;
     protected float speed;
-    protected long nextMoveCounterX = 0;
-    protected long nextMoveCounterY = 0;
+    protected int nextMoveCounterX = 0;
+    protected int nextMoveCounterY = 0;
     protected int dx = 0;
     protected int dy = 0;
     protected int direction;
@@ -16,8 +16,6 @@ public abstract class DynamicCharacter extends Character {
         setSpeed(speed);
     }
 
-    public void move(long deltaTime) {
-    }
     public float getSpeed() {
         return speed;
     }
@@ -33,11 +31,14 @@ public abstract class DynamicCharacter extends Character {
         this.lastPosition = lastPosition;
     }
 
+    public void move(long deltaTime) {
+    }
+
     public void accuracyMoveX(int vt) {
 
         dx = ((GameConsts.LEFT == lastDirection ) ? -vt : vt);
-
         nextMoveCounterX = nextMoveCounterX - vt ;
+
         if (nextMoveCounterX < 0) {
             if (GameConsts.LEFT == lastDirection)
                 dx = dx + (int) Math.abs(nextMoveCounterX);
@@ -50,8 +51,8 @@ public abstract class DynamicCharacter extends Character {
     public void accuracyMoveY(int vt) {
 
         dy = ((GameConsts.UP == lastDirection ) ? -vt : vt);
-
         nextMoveCounterY = nextMoveCounterY - vt;
+
         if (nextMoveCounterY < 0) {
             if (GameConsts.UP == lastDirection)
                 dy = dy + (int) Math.abs(nextMoveCounterY);
@@ -60,6 +61,7 @@ public abstract class DynamicCharacter extends Character {
             nextMoveCounterY = 0;
         }
     }
+
     public void moveOnAxisX(int vt) {
         if (!isDirectionOnAxisX())
             return;
@@ -74,7 +76,7 @@ public abstract class DynamicCharacter extends Character {
         if (!isDirectionOnAxisY())
             return;
 
-        dy = ( (direction == GameConsts.UP) ? -vt : vt );
+        dy = ((direction == GameConsts.UP) ? -vt : vt );
         nextMoveCounterY = GameConsts.BLOCK_HEIGHT - nextMoveCounterY - vt;
         lastDirection = direction;
     }

@@ -6,10 +6,10 @@ public abstract class Character implements ICollisional {
 	protected boolean isActive;
 	protected Stereotype stereotype;
 	protected Dimension dimension;
+	protected Color color;
 
 
 	public Character(int x, int y) {
-
 		position = new Point(x, y);
 		setDimension(new Dimension(0,0));
 	}
@@ -47,14 +47,16 @@ public abstract class Character implements ICollisional {
 		position.translate(dx, dy);
 	}
 
-	public void draw(Graphics g) {
-
+	public void setColor(Color color) {
+		this.color = color;
 	}
+
+	public void draw(Graphics g) {}
 
 	@Override
 	public abstract void onCollisionEnter(ICollisional other);
 
 	@Override
-	public abstract Point getPosition(); // TODO
+	public abstract Point getPosition();
 
 }

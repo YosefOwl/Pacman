@@ -23,7 +23,6 @@ public class CollisionDetector {
     }
 
     public List<Pair<ICollisional,ICollisional>> DetectCollisions(List<DynamicCharacter> dynamicCharacters) {
-        var mazeData = maze.getMap();
 
         var collisions = dynamicCharacters
                 .stream()
@@ -128,11 +127,9 @@ public class CollisionDetector {
         return null;
     }
 
-    private static boolean isPointInBounds(Point pOther) {
-        return !(pOther.y > GameConsts.MAZE_COL ||
-                pOther.x > GameConsts.MAZE_ROW ||
-                pOther.y < 0 ||
-                pOther.x < 0);
+    private static boolean isPointInBounds(Point point) {
+        return !( point.y > GameConsts.MAZE_COL - 1 || point.y < 0 ||
+                point.x > GameConsts.MAZE_ROW - 1 || point.x < 0 );
     }
 
     private Point getNeighborsFrom(Point pCharacter, int direction) {
@@ -142,7 +139,7 @@ public class CollisionDetector {
             case GameConsts.DOWN:
                 return new Point(pCharacter.x+1,pCharacter.y);
             case GameConsts.RIGHT:
-                return new Point(pCharacter.x ,pCharacter.y + 1 );
+                return new Point(pCharacter.x ,pCharacter.y + 1);
             case GameConsts.LEFT:
                 return new Point(pCharacter.x,pCharacter.y - 1);
             default:
