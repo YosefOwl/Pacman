@@ -67,6 +67,7 @@ public class Pacman extends DynamicCharacter {
 
 		if (directionOther == lastDirection) {
 			System.out.println("Behind you");
+			GameData.getInstance().setLife(-1);
 
 		}
 

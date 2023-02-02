@@ -53,13 +53,13 @@ public class GameData {
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
     };
     private int[][][] mazeLevels = { mazeSketch1, mazeSketch2, mazeSketch3 };
-    static final int LIFE = 3;
+    static int LIFE = 3;
     static final int START_LEVEL = 1;
     private static GameData gameDataInstance;
 
     private int level;
     private int score;
-    private int life;
+    public int life;
 
     private GameData() {
         score = 0;
@@ -101,8 +101,11 @@ public class GameData {
         return life;
     }
 
-    private void setLife(int life) {
-        this.life = life;
+    public void setLife(int life) {
+        if(life==-1)
+            this.life = this.life--;
+        else
+            this.life = life;
     }
 
     public int[][] getSketch () {

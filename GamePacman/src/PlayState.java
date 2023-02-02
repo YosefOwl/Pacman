@@ -128,6 +128,8 @@ public class PlayState extends GameState {
 				resetGame();
 				initNextLevel();
 			}
+			else
+				active = false;
 		}
 		// TODO checkGameOver
 	}

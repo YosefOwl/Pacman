@@ -34,5 +34,6 @@ public class ResultState extends GameState {
 		g.setColor(Color.white);
 		g.drawString(text, (aGameFrameBuffer.getWidth()-textWidth)/2, aGameFrameBuffer.getHeight()/2);
 
+
 	}
 }
