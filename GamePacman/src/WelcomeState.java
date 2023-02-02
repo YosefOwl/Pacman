@@ -15,7 +15,6 @@ public class WelcomeState extends GameState {
 			System.exit(0);
 		active = false;
 	}
-
 	public boolean isActive() { return active; }
 
 	public String next() {
