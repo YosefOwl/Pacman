@@ -56,19 +56,23 @@ public class Pacman extends DynamicCharacter {
 		}
 
 		if (c.getStereotype().equals(Stereotype.eGhost))
-			handleGhostCollision(other);
+			if(handleGhostCollision(other))
+				GameData.getInstance().setLife(-1);
 			//TODO: set state "gameOver"
 	}
 
-	private void handleGhostCollision(ICollisional other) {
-
+	private boolean handleGhostCollision(ICollisional other) {
+		boolean accoured = false;
 		Point pOther = other.getPosition();
 		int directionOther = ((DynamicCharacter)other).getLastDirection();
 
-		if (directionOther == lastDirection) {
+		if (position.y == lastPosition.y || position.x == lastPosition.x){
 			System.out.println("Behind you");
-			GameData.getInstance().setLife(-1);
+			accoured = true;
+			setPosition(new Point(GameConsts.BLOCK_WIDTH + 6, GameConsts.BLOCK_HEIGHT + 6));
 		}
+		return accoured;
+	}
 
 		/*
 		 checkDirectionCollision();
@@ -79,7 +83,7 @@ public class Pacman extends DynamicCharacter {
 		 פסילות
 		 */
 
-	}
+
 
 	private void handleWallCollision() {
 

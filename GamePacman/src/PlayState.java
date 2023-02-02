@@ -115,7 +115,6 @@ public class PlayState extends GameState {
 			maze.setCharacterInPosition(ghost);
 		}
 		collisionDetector.ExecuteOnCollisionEnters(collisions);
-
 		gameData.setScore(pacman.getCoinsSize());
 		checkLevel();
 	}

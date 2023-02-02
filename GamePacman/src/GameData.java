@@ -103,7 +103,7 @@ public class GameData {
 
     public void setLife(int life) {
         if(life==-1)
-            this.life = this.life--;
+            this.life--;
         else
             this.life = life;
     }
