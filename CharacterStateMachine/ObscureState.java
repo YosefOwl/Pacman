@@ -18,24 +18,25 @@ public class ObscureState implements ICharacterState{
 
     @Override
     public void handleState(Map<String, Object> handlerArguments) {
+
         Pacman pacman = (Pacman) handlerArguments.get("character");
         long deltaTime = (Long) handlerArguments.get("deltaTime");
+
         pacman.setObscure(true);
         pacman.move(deltaTime);
 
         if(System.currentTimeMillis() < timer){
-            if(pacman.getColor() == Color.YELLOW){
+            if(pacman.getColor() == GameConsts.PACMAN_COLOR){
                 pacman.setColor(Color.WHITE);
             }
             else{
-                pacman.setColor(Color.YELLOW);
+                pacman.setColor(GameConsts.PACMAN_COLOR);
             }
         }
         else{
             canExitFromState = true;
             pacman.getStateMachine().MakeTransition(new HashMap<>(),"dying");
         }
-
     }
 
 }

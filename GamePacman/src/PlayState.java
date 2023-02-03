@@ -46,18 +46,21 @@ public class PlayState extends GameState {
 		pacman = new Pacman(pSpeed, GameConsts.PACMAN_X, GameConsts.PACMAN_Y,pacmanStateMachine);
 		maze.setCharacterInPosition(pacman);
 
-		// set ghosts position and double the ghosts each level
-		for (int i = 1 ; i <= gameData.getLevel(); i++) {
-			y = GameConsts.GHOST_Y + GameConsts.BLOCK_HEIGHT *(i - gameData.getLevel());
-			for (int j = 0; j < GameConsts.NUMBER_OF_GHOST; j++) {
+		Ghost ghost = new Ghost(GameConsts.DEFAULT_SPEED, GameConsts.PACMAN_X, GameConsts.PACMAN_Y);
 
-				Ghost ghost = new Ghost(GameConsts.DEFAULT_SPEED, x, y);
-				ghosts.add(ghost);
-				maze.setCharacterInPosition(ghost);
-				x = x + GameConsts.BLOCK_WIDTH;
-			}
-			x = GameConsts.GHOST_X;
-		}
+		ghosts.add(ghost);
+		// set ghosts position and double the ghosts each level
+//		for (int i = 1 ; i <= gameData.getLevel(); i++) {
+//			y = GameConsts.GHOST_Y + GameConsts.BLOCK_HEIGHT *(i - gameData.getLevel());
+//			for (int j = 0; j < GameConsts.NUMBER_OF_GHOST; j++) {
+//
+//				Ghost ghost = new Ghost(GameConsts.DEFAULT_SPEED, x, y);
+//				ghosts.add(ghost);
+//				maze.setCharacterInPosition(ghost);
+//				x = x + GameConsts.BLOCK_WIDTH;
+//			}
+//			x = GameConsts.GHOST_X;
+//		}
 	}
 
 
@@ -86,31 +89,9 @@ public class PlayState extends GameState {
 		if (aKeyCode == KeyEvent.VK_Q)
 			active = false;
 
-
-//		int pDir = pacman.getDirection();
-//
-//		switch (aKeyCode) {
-//			case KeyEvent.VK_RIGHT:
-//				if (GameConsts.RIGHT == pDir)
-//					pacman.setDirection(GameConsts.STOP);
-//			case KeyEvent.VK_LEFT:
-//				if (GameConsts.LEFT == pDir)
-//					pacman.setDirection(GameConsts.STOP);
-//			case KeyEvent.VK_DOWN:
-//				if (GameConsts.DOWN == pDir)
-//					pacman.setDirection(GameConsts.STOP);
-//			case KeyEvent.VK_UP:
-//				if (GameConsts.UP == pDir)
-//					pacman.setDirection(GameConsts.STOP);
-//			default:
-//				// do nothing
-//		}
-
 	}
 
 	public void processKeyPressed(int aKeyCode) {
-
-		///boolean noDirection = pacman.getDirection() == GameConsts.STOP;
 
 		if (aKeyCode == KeyEvent.VK_RIGHT)
 			pacman.setDirection(GameConsts.RIGHT);
@@ -147,7 +128,7 @@ public class PlayState extends GameState {
 
 	private void checkLevelStatus() {
 
-		if (gameData.getScore() >= 10 || pacman.getCoinsSize() == maze.getCoinCount()) { //TODO  40 for testing, shall be maze.getCoinCount()
+		if (pacman.getCoinsSize() == maze.getCoinCount()) {
 			if (gameData.hasNextLevel()) {
 				resetGame();
 				initNextLevel();

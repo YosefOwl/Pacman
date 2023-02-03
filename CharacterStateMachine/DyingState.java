@@ -24,11 +24,11 @@ public class DyingState implements ICharacterState{
         pacman.move(deltaTime);
 
         if(System.currentTimeMillis() < timer){
-            if(pacman.getColor() == Color.YELLOW){
+            if(pacman.getColor() == GameConsts.PACMAN_COLOR){
                 pacman.setColor(Color.RED);
             }
             else{
-                pacman.setColor(Color.YELLOW);
+                pacman.setColor(GameConsts.PACMAN_COLOR);
             }
         }
         else{
