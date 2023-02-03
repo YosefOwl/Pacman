@@ -18,6 +18,13 @@ public class WelcomeState extends GameState {
 				numState = 0;
 		}
 
+		if (aKeyCode == KeyEvent.VK_UP) {
+			numState--;
+			if (numState < 0)
+				numState = 1;
+		}
+
+
 		if (aKeyCode == KeyEvent.VK_ENTER) {
 			if (numState == 0)
 				active = false;
