@@ -6,11 +6,15 @@ public class MazeWall extends Character {
         super(x, y);
         setStereotype(Stereotype.eWall);
         setActive(true);
-        setColor(Color.BLUE);
+        setColor(GameConsts.WALL_COLOR);
     }
 
     @Override
     public void onCollisionEnter(ICollisional other) {
+        Character c = other.getCharacter();
+
+        if (c.getStereotype().equals(Stereotype.eGhost))
+            setColor(c.getColor());
     }
 
     @Override

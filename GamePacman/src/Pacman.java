@@ -6,7 +6,7 @@ import java.util.List;
 public class Pacman extends DynamicCharacter {
 	private int life;
 	private List<Coin> coins = new ArrayList<>();
-
+	private boolean isObscure;
 
 
 	public Pacman(float speed, int x, int y,CharacterStateMachine stateMachine) {
@@ -21,13 +21,8 @@ public class Pacman extends DynamicCharacter {
 
 		setDirection(GameConsts.STOP);
 		lastDirection = direction;
-
-		setColor(Color.YELLOW);
+		setColor(GameConsts.PACMAN_COLOR);
 	}
-
-	//public void ExecuteState
-
-
 
 	public void move(long deltaTime) {
 
@@ -58,43 +53,25 @@ public class Pacman extends DynamicCharacter {
 			handleWallCollision();
 
 		if (c.getStereotype().equals(Stereotype.eCoin)) {
-			if (c.isActive()) {
+			if (c.isActive() && !this.isObscure()) {
 				coins.add( (Coin)c);
 			}
 		}
 
 		else if(c.getStereotype().equals(Stereotype.eSpecCoin)){
-			if (c.isActive()) {
+			if (c.isActive() && !this.isObscure()) {
 				coins.add((SpecialCoin)c);
 			}
 		}
 
 		if (c.getStereotype().equals(Stereotype.eGhost))
 			handleGhostCollision(other);
-			//TODO: set state "gameOver"
 	}
 
 	private void handleGhostCollision(ICollisional other) {
-
-		this.getStateMachine().MakeTransition("ghostHit");
-		/*
-		Point pOther = other.getPosition();
-		int directionOther = ((DynamicCharacter)other).getLastDirection();
-
-		if (directionOther == lastDirection) {
-			System.out.println("Behind you");
-
-		}
-*/
-		/*
-		 checkDirectionCollision();
-		 Sticky
-		 change color
-		 freeze with some special coin
-		 life
-		 פסילות
-		 */
-
+		var transitionArguments = new HashMap<String,Object>();
+		transitionArguments.put("character",this);
+		this.getStateMachine().MakeTransition(transitionArguments,"ghostHit");
 	}
 
 	private void handleWallCollision() {
@@ -150,10 +127,7 @@ public class Pacman extends DynamicCharacter {
 		handlerArguments.put("deltaTime",deltaTime);
 		handlerArguments.put("character",this);
 
-		var handler = stateMachine.getCurrentState().getStateHandler();
-		if(handler != null)
-			handler.handleState(handlerArguments);
-
+		stateMachine.getCurrentState().handleState(handlerArguments);
 	}
 
 	public int getCoinsSize() {
@@ -161,12 +135,10 @@ public class Pacman extends DynamicCharacter {
 	}
 
 	public int checkScore(){
-		int s=0;
+		int s = 0;
+
 		for(Coin c : coins){
-			if(c instanceof SpecialCoin)
-				s=s+5;
-			else if(c instanceof Coin)
-				s++;
+			s += c.getCoinVal();
 		}
 		return s;
 	}
@@ -183,7 +155,14 @@ public class Pacman extends DynamicCharacter {
 	}
 
 	public void decreaseLife() {
-		this.life++;
-		this.stateMachine.MakeTransition("lifeDecreased");
+		this.life--;
+	}
+
+	public boolean isObscure() {
+		return isObscure;
+	}
+
+	public void setObscure(boolean obscure) {
+		this.isObscure = obscure;
 	}
 }

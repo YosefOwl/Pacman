@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.Arrays;
+import java.util.List;
 import javax.swing.JPanel;
 
 public class Maze extends JPanel {
@@ -76,7 +77,6 @@ public class Maze extends JPanel {
 		int lastRow = character.getLastPosition().y / GameConsts.BLOCK_HEIGHT;
 
 		if(!mazeData[row][col].getCollisional().contains(character)) {
-
 			mazeData[lastRow][lastCol].getCollisional().remove(character);
 			mazeData[row][col].getCollisional().add(character);
 		}

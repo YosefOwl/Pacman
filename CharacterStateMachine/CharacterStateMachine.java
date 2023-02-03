@@ -31,29 +31,27 @@ public class CharacterStateMachine {
             );
         }
 
-        stateOnTriggerTransition = transition;
+        stateTransitions.put(transition.getTrigger(),transition);
 
     }
 
-    public void MakeTransition(String trigger){
+    public void MakeTransition(Map<String, Object> transitionParam, String trigger){
         var stateTransitions =  transitionMap.get(this.currentState);
 
-        if(stateTransitions == null){
+        if (stateTransitions == null)
             return;
-        }
 
         var transitionOnTrigger = stateTransitions.get(trigger);
 
-        if(transitionOnTrigger == null){
+        if(transitionOnTrigger == null)
             return;
+
+        boolean canExitFromState = currentState.onStateExit(new HashMap<>());
+
+        if (canExitFromState){
+            currentState =  transitionOnTrigger.getTo();
+            currentState.onStateEnter(transitionParam);
         }
-
-        currentState.onStateExit();
-
-        currentState =  transitionOnTrigger.getTo();
-
-        currentState.onStateEnter();
-
     }
 
     public ICharacterState getCurrentState() {
