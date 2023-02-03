@@ -116,7 +116,7 @@ public class PlayState extends GameState {
 		}
 		collisionDetector.ExecuteOnCollisionEnters(collisions);
 
-		gameData.setScore(pacman.getCoinsSize());
+		gameData.setScore(pacman.checkScore());
 		checkLevel();
 	}
 
