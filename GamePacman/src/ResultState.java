@@ -68,29 +68,32 @@ public class ResultState extends GameState {
 		int widthFrame = aGameFrameBuffer.getWidth();
 		int heightFrame = aGameFrameBuffer.getHeight();
 
+		int textWidth;
 //		g.drawRect(widthFrame/2 , 1, 1, heightFrame);
 //		g.drawRect(1 , heightFrame/2, widthFrame, 1);
 
-		// draw status
+		// draw statusGame
 		g.setColor(Color.RED);
 		g.setFont(new Font("Serif", Font.BOLD, 48));
-		int textWidthStatus = g.getFontMetrics().stringWidth(statusGame);
-		g.drawString(statusGame, (widthFrame - textWidthStatus)/2, heightFrame/4);
+		textWidth = g.getFontMetrics().stringWidth(statusGame);
+		g.drawString(statusGame, (widthFrame - textWidth)/2, heightFrame/4);
 
-		// draw result
+
 		g.setColor(Color.CYAN);
 		g.setFont(new Font(Font.DIALOG, Font.BOLD, 28));
-
-		int textWidthSc = g.getFontMetrics().stringWidth(scores);
-		int textWidthL = g.getFontMetrics().stringWidth(lastLevel);
 		int fontHeight = g.getFontMetrics().getHeight();
 
-		g.drawString(lastLevel, (widthFrame - textWidthL)/2, heightFrame/2 + fontHeight);
-		g.drawString(scores, (widthFrame - textWidthSc)/2, heightFrame/2 + fontHeight*2);
-//
-//		g.setColor(Color.WHITE);
-//		g.drawString(PLAY_AGAIN, widthFrame/2, heightFrame*2 + fontHeight*3);
-//		g.drawString(EXIT, widthFrame/2, (int)(heightFrame*0.9f) + fontHeight*4);
+		// draw scores
+		textWidth = g.getFontMetrics().stringWidth(lastLevel);
+		g.drawString(lastLevel, (widthFrame - textWidth)/2, heightFrame/2 + fontHeight);
+		textWidth = g.getFontMetrics().stringWidth(scores);
+		g.drawString(scores, (widthFrame - textWidth)/2, heightFrame/2 + fontHeight*2);
+
+		g.setColor(Color.WHITE);
+		textWidth = g.getFontMetrics().stringWidth(PLAY_AGAIN);
+		g.drawString(PLAY_AGAIN, (widthFrame - textWidth)/2, heightFrame - fontHeight*2);
+		textWidth = g.getFontMetrics().stringWidth(EXIT);
+		g.drawString(EXIT, (widthFrame - textWidth)/2, heightFrame - fontHeight/2);
 
 	}
 
