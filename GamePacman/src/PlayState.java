@@ -190,7 +190,7 @@ public class PlayState extends GameState {
 
 		int textWidth = 0;
 		g.setColor(Color.RED);
-		String scoreTxt = "COINS:  " + pacman.getCoinsSize();
+		String scoreTxt = "COINS:  " + gameData.getScore();
 		String levelTxt = "LEVEL:  " + gameData.getLevel();
 		String lifeTxt = "LIFE:  " + pacman.getLife();
 		g.setFont(new Font("Serif", Font.BOLD, 28) );

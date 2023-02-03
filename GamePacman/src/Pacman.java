@@ -155,7 +155,7 @@ public class Pacman extends DynamicCharacter {
 	}
 
 	public void decreaseLife() {
-		this.life++;
+		this.life--;
 	}
 
 	public boolean isObscure() {
