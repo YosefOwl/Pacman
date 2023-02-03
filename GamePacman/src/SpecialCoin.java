@@ -7,6 +7,7 @@ public class SpecialCoin extends Coin {
         setActive(true);
         setStereotype(Stereotype.eSpecCoin);
         setColor(Color.GREEN);
+        setCoinVal(50);
     }
 
     @Override

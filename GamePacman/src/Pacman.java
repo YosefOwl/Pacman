@@ -161,13 +161,12 @@ public class Pacman extends DynamicCharacter {
 	}
 
 	public int checkScore(){
-		int s=0;
+		int s = 0;
+
 		for(Coin c : coins){
-			if(c instanceof SpecialCoin)
-				s=s+5;
-			else if(c instanceof Coin)
-				s++;
+			s += c.getCoinVal();
 		}
+
 		return s;
 	}
 	public void draw(Graphics g) {

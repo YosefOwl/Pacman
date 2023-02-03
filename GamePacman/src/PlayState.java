@@ -2,21 +2,20 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class PlayState extends GameState {
 
 	private boolean active;
+	private String nextState = "Result";
 	private List<Ghost> ghosts;
 	private Pacman pacman;
 	private Maze maze;
 	private CollisionDetector collisionDetector;
 	private List<DynamicCharacter> dynamicCharacters;
 	private GameData gameData;
+	private boolean isTurbo;
 
 	public PlayState() {
-		gameData = GameData.getInstance();
-		initGame();
 	}
 
 	private void initGame() {
@@ -35,12 +34,15 @@ public class PlayState extends GameState {
 	private void initCharacter() {
 
 		// speed of pacman and ghosts increasing  each level
-		float speed = GameConsts.DEFAULT_SPEED + (gameData.getLevel() - 1)*0.1f;
+
+		float pSpeed = (isTurbo ? GameConsts.DEFAULT_SPEED*3 :GameConsts.DEFAULT_SPEED);
+
 		int x = GameConsts.GHOST_X;
 		int y;
 
 		CharacterStateMachine pacmanStateMachine = buildPacmanStateMachine();
-		pacman = new Pacman(speed, GameConsts.PACMAN_X, GameConsts.PACMAN_Y,pacmanStateMachine);
+
+		pacman = new Pacman(pSpeed, GameConsts.PACMAN_X, GameConsts.PACMAN_Y,pacmanStateMachine);
 		maze.setCharacterInPosition(pacman);
 
 		// set ghosts position and double the ghosts each level
@@ -48,7 +50,7 @@ public class PlayState extends GameState {
 			y = GameConsts.GHOST_Y + GameConsts.BLOCK_HEIGHT *(i - gameData.getLevel());
 			for (int j = 0; j < GameConsts.NUMBER_OF_GHOST; j++) {
 
-				Ghost ghost = new Ghost(speed, x, y);
+				Ghost ghost = new Ghost(GameConsts.DEFAULT_SPEED, x, y);
 				ghosts.add(ghost);
 				maze.setCharacterInPosition(ghost);
 				x = x + GameConsts.BLOCK_WIDTH;
@@ -70,33 +72,9 @@ public class PlayState extends GameState {
 		stateMachine.AddTransition(new Transition(diedState,exploreState,"explorer"));
 
 		return stateMachine;
-
 	}
 
 	public void processKeyReleased(int aKeyCode) {
-
-		int pDir = pacman.getDirection();
-
-		switch (aKeyCode) {
-			case KeyEvent.VK_RIGHT:
-				if (GameConsts.RIGHT == pDir)
-					pacman.setDirection(GameConsts.STOP);
-			case KeyEvent.VK_LEFT:
-				if (GameConsts.LEFT == pDir)
-					pacman.setDirection(GameConsts.STOP);
-			case KeyEvent.VK_DOWN:
-				if (GameConsts.DOWN == pDir)
-					pacman.setDirection(GameConsts.STOP);
-			case KeyEvent.VK_UP:
-				if (GameConsts.UP == pDir)
-					pacman.setDirection(GameConsts.STOP);
-			default:
-				// do nothing
-		}
-
-	}
-
-	public void processKeyPressed(int aKeyCode) {
 
 		if (aKeyCode == KeyEvent.VK_ESCAPE)
 			System.exit(0);
@@ -104,18 +82,42 @@ public class PlayState extends GameState {
 		if (aKeyCode == KeyEvent.VK_Q)
 			active = false;
 
-		boolean noDirection = pacman.getDirection() == GameConsts.STOP;
 
-		if (aKeyCode == KeyEvent.VK_RIGHT && noDirection)
+//		int pDir = pacman.getDirection();
+//
+//		switch (aKeyCode) {
+//			case KeyEvent.VK_RIGHT:
+//				if (GameConsts.RIGHT == pDir)
+//					pacman.setDirection(GameConsts.STOP);
+//			case KeyEvent.VK_LEFT:
+//				if (GameConsts.LEFT == pDir)
+//					pacman.setDirection(GameConsts.STOP);
+//			case KeyEvent.VK_DOWN:
+//				if (GameConsts.DOWN == pDir)
+//					pacman.setDirection(GameConsts.STOP);
+//			case KeyEvent.VK_UP:
+//				if (GameConsts.UP == pDir)
+//					pacman.setDirection(GameConsts.STOP);
+//			default:
+//				// do nothing
+//		}
+
+	}
+
+	public void processKeyPressed(int aKeyCode) {
+
+		///boolean noDirection = pacman.getDirection() == GameConsts.STOP;
+
+		if (aKeyCode == KeyEvent.VK_RIGHT)
 			pacman.setDirection(GameConsts.RIGHT);
 
-		if (aKeyCode == KeyEvent.VK_LEFT&& noDirection)
+		if (aKeyCode == KeyEvent.VK_LEFT)
 			pacman.setDirection(GameConsts.LEFT);
 
-		if (aKeyCode == KeyEvent.VK_DOWN && noDirection)
+		if (aKeyCode == KeyEvent.VK_DOWN)
 			pacman.setDirection(GameConsts.DOWN);
 
-		if (aKeyCode == KeyEvent.VK_UP && noDirection)
+		if (aKeyCode == KeyEvent.VK_UP)
 			pacman.setDirection(GameConsts.UP);
 	}
 
@@ -135,14 +137,15 @@ public class PlayState extends GameState {
 		collisionDetector.ExecuteOnCollisionEnters(collisions);
 
 		gameData.setScore(pacman.checkScore());
+
 		checkLevelStatus();
 	}
 
 	private void checkLevelStatus() {
-		if (gameData.getScore() >= 40 || gameData.getScore() == maze.getCoinCount()) { // 40 for testing, shall be maze.getCoinCount()
-			// TODO display some message or other screen
+
+		if (gameData.getScore() >= 10 || pacman.getCoinsSize() == maze.getCoinCount()) { // 40 for testing, shall be maze.getCoinCount()
 			if (gameData.hasNextLevel()) {
-				// TODO save previous lvl data
+
 				resetGame();
 				initNextLevel();
 			}
@@ -151,13 +154,14 @@ public class PlayState extends GameState {
 			}
 		}
 
-		if(gameData.getLevel() <= 0){
+		if (pacman.getLife() <= 0) {
 			this.active = false;
 		}
 	}
 
 	private void initNextLevel() {
 		gameData.nextLevel();
+
 		maze = new Maze(gameData.getSketch());
 		collisionDetector = new CollisionDetector(maze);
 		initCharacter();
@@ -166,7 +170,6 @@ public class PlayState extends GameState {
 	}
 
 	private void resetGame() {
-		// dataGame not rested
 		maze = null;
 		pacman = null;
 		collisionDetector = null;
@@ -179,13 +182,21 @@ public class PlayState extends GameState {
 	}
 
 	public void enter(Object memento) {
+
+		if(memento.getClass().equals(WelcomeState.class)){
+			if (((WelcomeState)memento).getNumState() == 1) {
+				isTurbo = true;
+			}
+		}
 		active = true;
+		gameData = GameData.getInstance();
+		initGame();
 	}
 
 	public boolean isActive() { return active; }
 
 	public String next() {
-		return "Result";
+		return nextState;
 	}
 
 	public void render(GameFrameBuffer aGameFrameBuffer) {
@@ -199,7 +210,7 @@ public class PlayState extends GameState {
 	public void drawStatusBar(Graphics g) {
 		g.setColor(Color.RED);
 
-		String scoreTxt = "SCORES:  " + gameData.getScore();
+		String scoreTxt = "COINS:  " + pacman.getCoinsSize();
 		String levelTxt = "LEVEL:  " + gameData.getLevel();
 		String lifeTxt = "LIFE:  " + pacman.getLife();
 
@@ -237,5 +248,9 @@ public class PlayState extends GameState {
 
 	public GameData getData() {
 		return gameData;
+	}
+
+	public Pacman getPacman() {
+		return pacman;
 	}
 }

@@ -58,7 +58,6 @@ public class GameData {
 
     private int level;
     private int score;
-    private int life;
 
     private GameData() {
         score = 0;
@@ -81,10 +80,7 @@ public class GameData {
     }
 
     public void nextLevel () {
-        if (level < mazeLevels.length) {
             incLevel();
-            setScore(0);
-        }
     }
     public int getScore() {
         return score;
@@ -92,14 +88,6 @@ public class GameData {
 
     public void setScore(int score) {
         this.score = score;
-    }
-
-    public int getLife() {
-        return life;
-    }
-
-    private void setLife(int life) {
-        this.life = life;
     }
 
     public int[][] getSketch () {
