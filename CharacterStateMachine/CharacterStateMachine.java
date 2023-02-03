@@ -38,21 +38,18 @@ public class CharacterStateMachine {
     public void MakeTransition(Map<String, Object> transitionParam, String trigger){
         var stateTransitions =  transitionMap.get(this.currentState);
 
-        if(stateTransitions == null){
+        if (stateTransitions == null)
             return;
-        }
 
         var transitionOnTrigger = stateTransitions.get(trigger);
 
-        if(transitionOnTrigger == null){
+        if(transitionOnTrigger == null)
             return;
-        }
 
         boolean canExitFromState = currentState.onStateExit(new HashMap<>());
 
-        if(canExitFromState){
+        if (canExitFromState){
             currentState =  transitionOnTrigger.getTo();
-
             currentState.onStateEnter(transitionParam);
         }
     }

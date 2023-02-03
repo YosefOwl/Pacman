@@ -21,13 +21,8 @@ public class Pacman extends DynamicCharacter {
 
 		setDirection(GameConsts.STOP);
 		lastDirection = direction;
-
-		setColor(Color.YELLOW);
+		setColor(GameConsts.PACMAN_COLOR);
 	}
-
-	//public void ExecuteState
-
-
 
 	public void move(long deltaTime) {
 
@@ -76,10 +71,6 @@ public class Pacman extends DynamicCharacter {
 	private void handleGhostCollision(ICollisional other) {
 		var transitionArguments = new HashMap<String,Object>();
 		transitionArguments.put("character",this);
-		System.out.println("Sent ghost hit trigger");
-		System.out.println("ghost position : " + other.getPosition());
-		System.out.println("pacman position : " + this.getPosition());
-
 		this.getStateMachine().MakeTransition(transitionArguments,"ghostHit");
 	}
 
@@ -102,7 +93,6 @@ public class Pacman extends DynamicCharacter {
 		direction = GameConsts.STOP;
 		setPosition(new Point(this.getLastPosition()));
 	}
-
 
 	@Override
 	public Character getCharacter() {
@@ -140,13 +130,15 @@ public class Pacman extends DynamicCharacter {
 		stateMachine.getCurrentState().handleState(handlerArguments);
 	}
 
+	public int getCoinsSize() {
+		return coins.size();
+	}
+
 	public int checkScore(){
-		int s=0;
+		int s = 0;
+
 		for(Coin c : coins){
-			if(c instanceof SpecialCoin)
-				s=s+5;
-			else if(c instanceof Coin)
-				s++;
+			s += c.getCoinVal();
 		}
 		return s;
 	}

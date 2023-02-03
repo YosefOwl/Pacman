@@ -4,9 +4,11 @@ import java.util.List;
 
 public class Ghost extends DynamicCharacter {
 
-	static final Color[] ghostColor = {Color.MAGENTA, Color.RED, Color.GREEN, Color.CYAN, Color.BLUE};
+	static final List<Color> ghostColor = Arrays.asList(Color.MAGENTA, Color.RED, Color.GREEN, Color.CYAN, Color.BLUE);
+
+	private Queue<Integer> dirQueue;
 	private long time = 0;
-	private Queue<Integer> dirQueue = new LinkedList<>();
+
 
 	public Ghost(float speed, int x, int y) {
 		super(speed, x, y,null);
@@ -15,16 +17,15 @@ public class Ghost extends DynamicCharacter {
 		setStereotype(Stereotype.eGhost);
 		setDimension(new Dimension(GameConsts.GHOST_D, GameConsts.GHOST_D));
 
-		dirQueue.add(GameConsts.UP);
-		dirQueue.add(GameConsts.LEFT);
-		dirQueue.add(GameConsts.DOWN);
-		dirQueue.add(GameConsts.RIGHT);
-		setMoveFlow();
-
+		dirQueue = new LinkedList<>();
+		dirQueue.addAll(Arrays.asList(GameConsts.UP, GameConsts.LEFT, GameConsts.DOWN, GameConsts.RIGHT));
 		setLastPosition(new Point(this.position));
+
+		setMoveFlow();
 		lastDirection = direction;
-		setColor();
+		initGhostColor();
 	}
+
 
 	@Override
 	public void move(long deltaTime) {
@@ -46,7 +47,7 @@ public class Ghost extends DynamicCharacter {
 		translatePosition(dx, dy);
 
 		time += deltaTime;
-		if (time > 1000 && (nextMoveCounterX == 0 || nextMoveCounterY == 0)) {
+		if (time > 1000 && (nextMoveCounterX == 0 && nextMoveCounterY == 0)) {
 			setMoveFlow();
 			time = 0;
 		}
@@ -63,11 +64,12 @@ public class Ghost extends DynamicCharacter {
 		newDirection = dirQueue.poll();
 		dirQueue.add(newDirection);
 
-		if (newDirection == direction)
+		if (newDirection == direction) {
 			dirQueue.add(dirQueue.poll());
+			Collections.shuffle((List<Integer>) dirQueue);
+		}
 
 		setDirection(dirQueue.peek());
-		Collections.shuffle((List<Integer>) dirQueue);
 	}
 
 
@@ -76,12 +78,22 @@ public class Ghost extends DynamicCharacter {
 
 		if (other.getCharacter().getStereotype().equals(Stereotype.eWall)) {
 			handleWallCollision();
-			return;
 		}
+
 		if (other.getCharacter().getStereotype().equals(Stereotype.eGhost)) {
-			this.setColor(other.getCharacter().getColor());
-			return;
+			changeColor();
 		}
+
+	}
+
+	private void changeColor() {
+		int currentColorId = ghostColor.indexOf(color);
+
+		if (currentColorId == -1 || currentColorId == ghostColor.size() -1 )
+			setColor(ghostColor.get(0));
+		else
+			setColor(ghostColor.get(currentColorId + 1));
+
 
 	}
 
@@ -114,16 +126,15 @@ public class Ghost extends DynamicCharacter {
 
 		int relativeX = position.x + dimension.width/2 - (GameConsts.BLOCK_WIDTH/2) + 1;
 		int relativeY = position.y + dimension.height/2 - (GameConsts.BLOCK_HEIGHT/2) + 1;
-
 		int dimX = GameConsts.BLOCK_WIDTH  - 2;
 		int dimY = GameConsts.BLOCK_HEIGHT - 2;
 
 		return new Rectangle( new Point(relativeX, relativeY), new Dimension(dimX, dimY) );
 	}
 
-	private void setColor() {
-		Collections.shuffle(Arrays.asList(ghostColor));
-		setColor(Arrays.stream(ghostColor).findAny().get());
+	private void initGhostColor() {
+		Collections.shuffle(ghostColor);
+		setColor(ghostColor.stream().findAny().get());
 	}
 
 	public void draw(Graphics g) {

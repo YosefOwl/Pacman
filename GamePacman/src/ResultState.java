@@ -1,16 +1,17 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.Arrays;
 
 public class ResultState extends GameState {
 
 	final String PLAY_AGAIN = "PRESS 'P' TO PLAY AGAIN";
-	final String EXIT = "PRESS 'Esc' TO EXIT";
+	final String EXIT = "PRESS 'ESC' TO EXIT";
 	final String GAME_OVER = "GAME OVER";
 	final String GAME_WIN = "GAME WIN";
+	final String SCORES_TXT = "Scores : ";
+	final String LEVEL_TXT = "Your level : ";
 
-	private String scores = "Scores : ";
-	private String lastLevel = "Last level : ";
+	private String scoreTxt;
+	private String lvlTxt;
 	private String statusGame;
 
 	private String nextState;
@@ -22,17 +23,21 @@ public class ResultState extends GameState {
 	
 	public void enter(Object memento) {
 
+		scoreTxt = SCORES_TXT;
+		lvlTxt = LEVEL_TXT;
+
 		if (memento.getClass().equals(PlayState.class)) {
+			Pacman p = ((PlayState)memento).getPacman();
 			GameData data = ((PlayState)memento).getData();
 
-			scores = scores + data.getScore()*data.getLevel();
-			lastLevel = lastLevel + data.getLife();
-			if (data.getLife() == GameConsts.PACMAN_LIFE && !data.hasNextLevel())
-				statusGame = GAME_WIN;
-			else
-				statusGame = GAME_OVER;
-		}
+			scoreTxt = scoreTxt + data.getScore()*data.getLevel(); //TODO
+			lvlTxt = lvlTxt + data.getLevel();
 
+			if (p.getLife() == 0)
+				statusGame = GAME_OVER;
+			else
+				statusGame = GAME_WIN;
+		}
 
 		active = true;
 	}
@@ -45,11 +50,6 @@ public class ResultState extends GameState {
 		}
 
 		if (aKeyCode == KeyEvent.VK_P) {
-			nextState = "Play";
-			active = false;
-		}
-
-		if (aKeyCode == KeyEvent.VK_M) {
 			nextState = "Welcome";
 			active = false;
 		}
@@ -67,10 +67,7 @@ public class ResultState extends GameState {
 
 		int widthFrame = aGameFrameBuffer.getWidth();
 		int heightFrame = aGameFrameBuffer.getHeight();
-
 		int textWidth;
-//		g.drawRect(widthFrame/2 , 1, 1, heightFrame);
-//		g.drawRect(1 , heightFrame/2, widthFrame, 1);
 
 		// draw statusGame
 		g.setColor(Color.RED);
@@ -84,11 +81,15 @@ public class ResultState extends GameState {
 		int fontHeight = g.getFontMetrics().getHeight();
 
 		// draw scores
-		textWidth = g.getFontMetrics().stringWidth(lastLevel);
-		g.drawString(lastLevel, (widthFrame - textWidth)/2, heightFrame/2 + fontHeight);
-		textWidth = g.getFontMetrics().stringWidth(scores);
-		g.drawString(scores, (widthFrame - textWidth)/2, heightFrame/2 + fontHeight*2);
+		textWidth = g.getFontMetrics().stringWidth(lvlTxt);
+		g.drawString(lvlTxt, (widthFrame - textWidth)/2, heightFrame/2 + fontHeight);
 
+		// draw score
+		textWidth = g.getFontMetrics().stringWidth(scoreTxt);
+		g.drawString(scoreTxt, (widthFrame - textWidth)/2, heightFrame/2 + fontHeight*2);
+
+
+		// draw instruction
 		g.setColor(Color.WHITE);
 		textWidth = g.getFontMetrics().stringWidth(PLAY_AGAIN);
 		g.drawString(PLAY_AGAIN, (widthFrame - textWidth)/2, heightFrame - fontHeight*2);

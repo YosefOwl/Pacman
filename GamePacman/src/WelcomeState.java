@@ -25,7 +25,7 @@ public class WelcomeState extends GameState {
 		}
 
 		if (aKeyCode == KeyEvent.VK_ENTER) {
-			if (numState == 0)
+			if (numState == 0 || numState == 1)
 				active = false;
 			else
 				System.exit(0);
@@ -83,5 +83,9 @@ public class WelcomeState extends GameState {
 
 	public Object memento() {
 		return this;
+	}
+
+	public int getNumState() {
+		return numState;
 	}
 }
