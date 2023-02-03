@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.util.Map;
 
-public class ExploringStateHandler implements IStateHandler{
+public class ExploringStateHandler extends StateHandler {
 
     @Override
     public void handleState(Map<String, Object> handlerArguments) {

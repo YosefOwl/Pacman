@@ -37,6 +37,7 @@ public class CollisionDetector {
                         )
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
+
         return collisions;
     }
 

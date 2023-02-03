@@ -57,13 +57,17 @@ public class PlayState extends GameState {
 		}
 	}
 
+
 	private CharacterStateMachine buildPacmanStateMachine() {
-		ICharacterState exploreState = new ExploringState(new ExploringStateHandler());
-		ICharacterState zombieState = new ZombieState(new ZombieStateHandler());
+		var exploreState = new ExploringState(new ExploringStateHandler());
+		var zombieState = new ZombieState(new ZombieStateHandler());
+		var diedState = new DiedState(new DiedStatePacmanHandler());
 
 		CharacterStateMachine stateMachine = new CharacterStateMachine(exploreState);
 
 		stateMachine.AddTransition(new Transition(exploreState,zombieState,"ghostHit"));
+		stateMachine.AddTransition(new Transition(zombieState,diedState,"ghostHit"));
+		stateMachine.AddTransition(new Transition(diedState,exploreState,"explorer"));
 
 		return stateMachine;
 
@@ -131,19 +135,25 @@ public class PlayState extends GameState {
 		collisionDetector.ExecuteOnCollisionEnters(collisions);
 
 		gameData.setScore(pacman.checkScore());
-		checkLevel();
+		checkLevelStatus();
 	}
 
-	private void checkLevel() {
-		if (gameData.getScore() >= 40) { // 40 for testing, shall be maze.getCoinCount()
+	private void checkLevelStatus() {
+		if (gameData.getScore() >= 40 || gameData.getScore() == maze.getCoinCount()) { // 40 for testing, shall be maze.getCoinCount()
 			// TODO display some message or other screen
 			if (gameData.hasNextLevel()) {
 				// TODO save previous lvl data
 				resetGame();
 				initNextLevel();
 			}
+			else {
+				this.active = false;
+			}
 		}
-		// TODO checkGameOver
+
+		if(gameData.getLevel() <= 0){
+			this.active = false;
+		}
 	}
 
 	private void initNextLevel() {
@@ -191,7 +201,7 @@ public class PlayState extends GameState {
 
 		String scoreTxt = "SCORES:  " + gameData.getScore();
 		String levelTxt = "LEVEL:  " + gameData.getLevel();
-		String lifeTxt = "LIFE:  " + gameData.getLife();
+		String lifeTxt = "LIFE:  " + pacman.getLife();
 
 		int scoreTxtWidth = g.getFontMetrics().stringWidth(scoreTxt);
 		int lifeTxtWidth = g.getFontMetrics().stringWidth(lifeTxt);
@@ -225,4 +235,7 @@ public class PlayState extends GameState {
 		g.drawString( posMaze, Game.WIDTH/GameConsts.MAZE_COL , 590 );
 	}
 
+	public GameData getData() {
+		return gameData;
+	}
 }

@@ -3,19 +3,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
-/*
-pacman State machine
-explorering
-zombie
-
- */
 public class Pacman extends DynamicCharacter {
+	private int life;
 	private List<Coin> coins = new ArrayList<>();
 
-	public Pacman(float speed, int x, int y,CharacterStateMachine stateMachine) {
 
+
+	public Pacman(float speed, int x, int y,CharacterStateMachine stateMachine) {
 		super(speed, x, y, stateMachine);
+		this.life = GameConsts.PACMAN_LIFE;
 		setSpeed(speed);
 		setActive(true);
 		setStereotype(Stereotype.ePacman);
@@ -154,7 +150,9 @@ public class Pacman extends DynamicCharacter {
 		handlerArguments.put("deltaTime",deltaTime);
 		handlerArguments.put("character",this);
 
-		stateMachine.getCurrentState().getStateHandler().handleState(handlerArguments);
+		var handler = stateMachine.getCurrentState().getStateHandler();
+		if(handler != null)
+			handler.handleState(handlerArguments);
 
 	}
 
@@ -178,5 +176,14 @@ public class Pacman extends DynamicCharacter {
 
 		g.drawOval(position.x, position.y, dimension.width, dimension.height);
 		g.fillOval(position.x, position.y, dimension.width, dimension.height);
+	}
+
+	public int getLife() {
+		return life;
+	}
+
+	public void decreaseLife() {
+		this.life++;
+		this.stateMachine.MakeTransition("lifeDecreased");
 	}
 }

@@ -1,6 +1,6 @@
 public class ZombieState implements ICharacterState{
-    private IStateHandler stateHandler;
-    public ZombieState(IStateHandler stateHandler) {
+    private StateHandler stateHandler;
+    public ZombieState(StateHandler stateHandler) {
         this.stateHandler = stateHandler;
     }
 
@@ -11,11 +11,9 @@ public class ZombieState implements ICharacterState{
 
     @Override
     public void onStateExit() {
-
     }
-
     @Override
-    public IStateHandler getStateHandler() {
+    public StateHandler getStateHandler() {
         return stateHandler;
     }
 }
