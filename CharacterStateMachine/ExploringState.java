@@ -1,21 +1,27 @@
-public class ExploringState implements ICharacterState {
-    private StateHandler stateHandler;
-    public ExploringState(StateHandler stateHandler) {
-        this.stateHandler = stateHandler;
-    }
+import java.awt.*;
+import java.util.Map;
 
+public class ExploringState implements ICharacterState {
     @Override
-    public void onStateEnter() {
+    public void onStateEnter(Map<String, Object> handlerArguments) {
+        Pacman pacman = (Pacman)handlerArguments.get("character");
+        if(pacman != null){
+            pacman.setColor(Color.YELLOW);
+        }
         System.out.println("In exploring state");
     }
 
     @Override
-    public void onStateExit() {
+    public boolean onStateExit(Map<String, Object> handlerArguments) {
+        return true;
     }
 
     @Override
-    public StateHandler getStateHandler() {
-        return stateHandler;
-    }
+    public void handleState(Map<String, Object> handlerArguments) {
+        Pacman pacman = (Pacman) handlerArguments.get("character");
+        long deltaTime = (Long) handlerArguments.get("deltaTime");
+        pacman.setObscure(false);
+        pacman.move(deltaTime);
 
+    }
 }

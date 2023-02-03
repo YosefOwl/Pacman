@@ -2,7 +2,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class PlayState extends GameState {
 
@@ -59,14 +58,17 @@ public class PlayState extends GameState {
 
 
 	private CharacterStateMachine buildPacmanStateMachine() {
-		var exploreState = new ExploringState(new ExploringStateHandler());
-		var zombieState = new ZombieState(new ZombieStateHandler());
-		var diedState = new DiedState(new DiedStatePacmanHandler());
+		var exploreState = new ExploringState();
+		var obscureState = new ObscureState();
+		var dyingState = new DyingState();
+		var diedState = new DiedState();
 
 		CharacterStateMachine stateMachine = new CharacterStateMachine(exploreState);
 
-		stateMachine.AddTransition(new Transition(exploreState,zombieState,"ghostHit"));
-		stateMachine.AddTransition(new Transition(zombieState,diedState,"ghostHit"));
+		stateMachine.AddTransition(new Transition(exploreState,obscureState,"ghostHit"));
+		stateMachine.AddTransition(new Transition(obscureState,dyingState,"dying"));
+		stateMachine.AddTransition(new Transition(dyingState,diedState,"ghostHit"));
+		stateMachine.AddTransition(new Transition(dyingState,exploreState,"explorer"));
 		stateMachine.AddTransition(new Transition(diedState,exploreState,"explorer"));
 
 		return stateMachine;

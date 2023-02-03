@@ -35,7 +35,7 @@ public class CharacterStateMachine {
 
     }
 
-    public void MakeTransition(String trigger){
+    public void MakeTransition(Map<String, Object> transitionParam, String trigger){
         var stateTransitions =  transitionMap.get(this.currentState);
 
         if(stateTransitions == null){
@@ -48,12 +48,13 @@ public class CharacterStateMachine {
             return;
         }
 
-        currentState.onStateExit();
+        boolean canExitFromState = currentState.onStateExit(new HashMap<>());
 
-        currentState =  transitionOnTrigger.getTo();
+        if(canExitFromState){
+            currentState =  transitionOnTrigger.getTo();
 
-        currentState.onStateEnter();
-
+            currentState.onStateEnter(transitionParam);
+        }
     }
 
     public ICharacterState getCurrentState() {
