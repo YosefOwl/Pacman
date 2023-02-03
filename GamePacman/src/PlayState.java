@@ -15,10 +15,11 @@ public class PlayState extends GameState {
 	private GameData gameData;
 	private boolean isTurbo;
 
-	public PlayState() {
-	}
+	public PlayState() {}
 
-	private void initGame() {
+	public void initGame() {
+		gameData = new GameData();
+
 		dynamicCharacters = new ArrayList<>();
 		ghosts = new ArrayList<>();
 
@@ -31,7 +32,7 @@ public class PlayState extends GameState {
 		dynamicCharacters.addAll(ghosts);
 	}
 
-	private void initCharacter() {
+	protected void initCharacter() {
 
 		// speed of pacman and ghosts increasing  each level
 
@@ -143,9 +144,8 @@ public class PlayState extends GameState {
 
 	private void checkLevelStatus() {
 
-		if (gameData.getScore() >= 10 || pacman.getCoinsSize() == maze.getCoinCount()) { // 40 for testing, shall be maze.getCoinCount()
+		if (gameData.getScore() >= 10 || pacman.getCoinsSize() == maze.getCoinCount()) { //TODO  40 for testing, shall be maze.getCoinCount()
 			if (gameData.hasNextLevel()) {
-
 				resetGame();
 				initNextLevel();
 			}
@@ -189,7 +189,6 @@ public class PlayState extends GameState {
 			}
 		}
 		active = true;
-		gameData = GameData.getInstance();
 		initGame();
 	}
 
@@ -203,46 +202,39 @@ public class PlayState extends GameState {
 		
 		Graphics g = aGameFrameBuffer.graphics();
 
-		drawStatusBar(g);
+		drawStatusBar(g, aGameFrameBuffer.getWidth(), aGameFrameBuffer.getHeight());
 		maze.drawMaze(g);
 	}
 
-	public void drawStatusBar(Graphics g) {
-		g.setColor(Color.RED);
+	private void drawStatusBar(Graphics g, int frameWidth, int frameHeight) {
 
+		int textWidth = 0;
+		g.setColor(Color.RED);
 		String scoreTxt = "COINS:  " + pacman.getCoinsSize();
 		String levelTxt = "LEVEL:  " + gameData.getLevel();
 		String lifeTxt = "LIFE:  " + pacman.getLife();
-
-		int scoreTxtWidth = g.getFontMetrics().stringWidth(scoreTxt);
-		int lifeTxtWidth = g.getFontMetrics().stringWidth(lifeTxt);
-
 		g.setFont(new Font("Serif", Font.BOLD, 28) );
 
-		g.drawString( levelTxt, Game.WIDTH/GameConsts.MAZE_COL, 515 );
-		g.drawString( scoreTxt, Game.WIDTH/2 - scoreTxtWidth, 515 );
-		g.drawString( lifeTxt, Game.WIDTH - lifeTxtWidth*3,515 );
+		int fontHeight = g.getFontMetrics().getHeight();
+
+		g.drawString( levelTxt,frameWidth/GameConsts.MAZE_COL, (int)(frameHeight*0.81));
+
+		textWidth = g.getFontMetrics().stringWidth(scoreTxt);
+		g.drawString( scoreTxt,(frameWidth - textWidth)/2, (int)(frameHeight*0.81) );
+
+		textWidth = g.getFontMetrics().stringWidth(lifeTxt);
+		g.drawString( lifeTxt,frameWidth - textWidth, (int)(frameHeight*0.81));
 
 		// for fun
-		Point pp = pacman.getPosition();
-
-		String pacmanData = "Pacman Data : ";
-
-		String pacmanPosOnMaze = "real [row, col]=" + "[" + pp.x/GameConsts.BLOCK_WIDTH + ","+ pp.y/GameConsts.BLOCK_HEIGHT + "]";
-		String pacmanPosOnMazeRound = "maze [row, col]=" + "[" + Math.round(pp.x/GameConsts.BLOCK_WIDTH) + ","+ Math.round(pp.y/GameConsts.BLOCK_HEIGHT) + "]";
-		String posMaze = pacmanPosOnMaze +", " + pacmanPosOnMazeRound;
-
-		String pacmanRealPos = "curr pos [x, y]=" + "[" + pp.x + ","+ pp.y + "]";
-		String pacmanLastMovePixels = "step [dx, dy]=" + "["+ pacman.dx + "," + pacman.dy + "]";
-		String pos = pacmanRealPos +", " + pacmanLastMovePixels;
-
 		g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20) );
-
 		g.setColor(Color.GRAY);
 
-		g.drawString( pacmanData, Game.WIDTH/GameConsts.MAZE_COL, 545 );
+		Point pp = pacman.getPosition();
+		String posMaze = "maze [row, col]=" + "[" + Math.round(pp.x/GameConsts.BLOCK_WIDTH) + ","+ Math.round(pp.y/GameConsts.BLOCK_HEIGHT) + "]";
+		String pacmanRealPos = "pos [x, y]=" + "[" + pp.x + ","+ pp.y + "]";
+		String pacmanLastMovePixels = "step [dx, dy]=" + "["+ pacman.dx + "," + pacman.dy + "]";
 
-		g.drawString( pos, Game.WIDTH/GameConsts.MAZE_COL, 570 );
+		g.drawString( pacmanRealPos +", " + pacmanLastMovePixels, Game.WIDTH/GameConsts.MAZE_COL, 570 );
 		g.drawString( posMaze, Game.WIDTH/GameConsts.MAZE_COL , 590 );
 	}
 

@@ -33,7 +33,6 @@ public class GameData {
             { 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1 },
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
     };
-//{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 1, 1, 1, 1, 26 },
     private final int [][] mazeSketch3 = {
 
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -52,22 +51,16 @@ public class GameData {
             { 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
     };
-    private int[][][] mazeLevels = { mazeSketch1, mazeSketch2, mazeSketch3 };
+
+    private final int[][][] mazeLevels = { mazeSketch1, mazeSketch2, mazeSketch3 };
     static final int START_LEVEL = 1;
-    private static GameData gameDataInstance;
 
     private int level;
     private int score;
 
-    private GameData() {
+    public GameData () {
         score = 0;
         level = START_LEVEL;
-    }
-
-    public static GameData getInstance() {
-        if (gameDataInstance == null)
-            gameDataInstance = new GameData();
-        return gameDataInstance;
     }
 
     public int getLevel() {

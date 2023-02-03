@@ -3,11 +3,11 @@ import java.awt.*;
 public class SpecialCoin extends Coin {
     public SpecialCoin(int x, int y) {
         super(x, y);
-        setDimension(new Dimension(GameConsts.COIN_DIMENSION+3 , GameConsts.COIN_DIMENSION+3 ));
+        setDimension(new Dimension(GameConsts.S_COIN_DIMENSION , GameConsts.S_COIN_DIMENSION ));
         setActive(true);
         setStereotype(Stereotype.eSpecCoin);
-        setColor(Color.GREEN);
-        setCoinVal(50);
+        setColor(GameConsts.S_COIN_COLOR);
+        setCoinVal(GameConsts.S_COIN_VALUE);
     }
 
     @Override

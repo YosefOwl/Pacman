@@ -7,8 +7,6 @@ public class Pacman extends DynamicCharacter {
 	private int life;
 	private List<Coin> coins = new ArrayList<>();
 
-
-
 	public Pacman(float speed, int x, int y,CharacterStateMachine stateMachine) {
 		super(speed, x, y, stateMachine);
 		this.life = GameConsts.PACMAN_LIFE;
@@ -21,13 +19,8 @@ public class Pacman extends DynamicCharacter {
 
 		setDirection(GameConsts.STOP);
 		lastDirection = direction;
-
-		setColor(Color.YELLOW);
+		setColor(GameConsts.PACMAN_COLOR);
 	}
-
-	//public void ExecuteState
-
-
 
 	public void move(long deltaTime) {
 
@@ -77,24 +70,6 @@ public class Pacman extends DynamicCharacter {
 	private void handleGhostCollision(ICollisional other) {
 
 		this.getStateMachine().MakeTransition("ghostHit");
-		/*
-		Point pOther = other.getPosition();
-		int directionOther = ((DynamicCharacter)other).getLastDirection();
-
-		if (directionOther == lastDirection) {
-			System.out.println("Behind you");
-
-		}
-*/
-		/*
-		 checkDirectionCollision();
-		 Sticky
-		 change color
-		 freeze with some special coin
-		 life
-		 פסילות
-		 */
-
 	}
 
 	private void handleWallCollision() {
