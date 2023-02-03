@@ -6,6 +6,8 @@ import java.util.List;
 public class Pacman extends DynamicCharacter {
 	private int life;
 	private List<Coin> coins = new ArrayList<>();
+	private boolean isObscure;
+
 
 	public Pacman(float speed, int x, int y,CharacterStateMachine stateMachine) {
 		super(speed, x, y, stateMachine);
@@ -51,13 +53,13 @@ public class Pacman extends DynamicCharacter {
 			handleWallCollision();
 
 		if (c.getStereotype().equals(Stereotype.eCoin)) {
-			if (c.isActive()) {
+			if (c.isActive() && !this.isObscure()) {
 				coins.add( (Coin)c);
 			}
 		}
 
 		else if(c.getStereotype().equals(Stereotype.eSpecCoin)){
-			if (c.isActive()) {
+			if (c.isActive() && !this.isObscure()) {
 				coins.add((SpecialCoin)c);
 			}
 		}
@@ -68,8 +70,10 @@ public class Pacman extends DynamicCharacter {
 	}
 
 	private void handleGhostCollision(ICollisional other) {
-
-		this.getStateMachine().MakeTransition("ghostHit");
+		var transitionArguments = new HashMap<String,Object>();
+		transitionArguments.put("character",this);
+		System.out.println("Sent ghost hit trigger");
+		this.getStateMachine().MakeTransition(transitionArguments,"ghostHit");
 	}
 
 	private void handleWallCollision() {
@@ -125,10 +129,7 @@ public class Pacman extends DynamicCharacter {
 		handlerArguments.put("deltaTime",deltaTime);
 		handlerArguments.put("character",this);
 
-		var handler = stateMachine.getCurrentState().getStateHandler();
-		if(handler != null)
-			handler.handleState(handlerArguments);
-
+		stateMachine.getCurrentState().handleState(handlerArguments);
 	}
 
 	public int getCoinsSize() {
@@ -141,7 +142,6 @@ public class Pacman extends DynamicCharacter {
 		for(Coin c : coins){
 			s += c.getCoinVal();
 		}
-
 		return s;
 	}
 	public void draw(Graphics g) {
@@ -158,6 +158,13 @@ public class Pacman extends DynamicCharacter {
 
 	public void decreaseLife() {
 		this.life++;
-		this.stateMachine.MakeTransition("lifeDecreased");
+	}
+
+	public boolean isObscure() {
+		return isObscure;
+	}
+
+	public void setObscure(boolean obscure) {
+		this.isObscure = obscure;
 	}
 }
