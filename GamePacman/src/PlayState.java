@@ -46,21 +46,17 @@ public class PlayState extends GameState {
 		pacman = new Pacman(pSpeed, GameConsts.PACMAN_X, GameConsts.PACMAN_Y,pacmanStateMachine);
 		maze.setCharacterInPosition(pacman);
 
-		Ghost ghost = new Ghost(GameConsts.DEFAULT_SPEED, GameConsts.PACMAN_X, GameConsts.PACMAN_Y);
+		for (int i = 1 ; i <= gameData.getLevel(); i++) {
+			y = GameConsts.GHOST_Y + GameConsts.BLOCK_HEIGHT *(i - gameData.getLevel());
+			for (int j = 0; j < GameConsts.NUMBER_OF_GHOST; j++) {
 
-		ghosts.add(ghost);
-		// set ghosts position and double the ghosts each level
-//		for (int i = 1 ; i <= gameData.getLevel(); i++) {
-//			y = GameConsts.GHOST_Y + GameConsts.BLOCK_HEIGHT *(i - gameData.getLevel());
-//			for (int j = 0; j < GameConsts.NUMBER_OF_GHOST; j++) {
-//
-//				Ghost ghost = new Ghost(GameConsts.DEFAULT_SPEED, x, y);
-//				ghosts.add(ghost);
-//				maze.setCharacterInPosition(ghost);
-//				x = x + GameConsts.BLOCK_WIDTH;
-//			}
-//			x = GameConsts.GHOST_X;
-//		}
+				Ghost ghost = new Ghost(GameConsts.DEFAULT_SPEED, x, y);
+				ghosts.add(ghost);
+				maze.setCharacterInPosition(ghost);
+				x = x + GameConsts.BLOCK_WIDTH;
+			}
+			x = GameConsts.GHOST_X;
+		}
 	}
 
 
