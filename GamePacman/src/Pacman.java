@@ -71,13 +71,15 @@ public class Pacman extends DynamicCharacter {
 
 		if (c.getStereotype().equals(Stereotype.eGhost))
 			handleGhostCollision(other);
-			//TODO: set state "gameOver"
 	}
 
 	private void handleGhostCollision(ICollisional other) {
 		var transitionArguments = new HashMap<String,Object>();
 		transitionArguments.put("character",this);
 		System.out.println("Sent ghost hit trigger");
+		System.out.println("ghost position : " + other.getPosition());
+		System.out.println("pacman position : " + this.getPosition());
+
 		this.getStateMachine().MakeTransition(transitionArguments,"ghostHit");
 	}
 
@@ -136,10 +138,6 @@ public class Pacman extends DynamicCharacter {
 		handlerArguments.put("character",this);
 
 		stateMachine.getCurrentState().handleState(handlerArguments);
-	}
-
-	public int getCoinsSize() {
-		return coins.size();
 	}
 
 	public int checkScore(){

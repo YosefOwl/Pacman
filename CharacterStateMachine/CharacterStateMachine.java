@@ -31,7 +31,7 @@ public class CharacterStateMachine {
             );
         }
 
-        stateOnTriggerTransition = transition;
+        stateTransitions.put(transition.getTrigger(),transition);
 
     }
 

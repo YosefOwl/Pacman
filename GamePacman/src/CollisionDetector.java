@@ -38,7 +38,26 @@ public class CollisionDetector {
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
+        boolean isPacmanInList = false;
+
+        filterCollisionsToContainsOnlySinglePacmanCollision(collisions, isPacmanInList);
+
         return collisions;
+    }
+
+    private static void filterCollisionsToContainsOnlySinglePacmanCollision(
+            List<Pair<ICollisional, ICollisional>> collisions, boolean isPacmanInList) {
+        for(int i = 0; i < collisions.size() ; i++){
+            if(collisions.get(i).getKey().getCharacter().getStereotype().equals(Stereotype.ePacman) ||
+                    collisions.get(i).getValue().getCharacter().getStereotype().equals(Stereotype.ePacman)){
+                if(!isPacmanInList){
+                    isPacmanInList = true;
+                }else
+                {
+                    collisions.remove(collisions.get(i));
+                }
+            }
+        }
     }
 
     private List<Pair<ICollisional,ICollisional>> DetectCollisionInCurrentPosition(DynamicCharacter character) {

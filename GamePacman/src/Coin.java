@@ -12,7 +12,8 @@ public class Coin extends Character {
 
 	@Override
 	public void onCollisionEnter(ICollisional other) {
-		if (other.getCharacter().getStereotype().equals(Stereotype.ePacman)) {
+		if (other.getCharacter().getStereotype().equals(Stereotype.ePacman) &&
+				!(((Pacman)other.getCharacter()).isObscure())) {
 			this.setActive(false);
 		}
 	}

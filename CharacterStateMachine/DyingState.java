@@ -19,7 +19,7 @@ public class DyingState implements ICharacterState{
     public void handleState(Map<String, Object> handlerArguments) {
         Pacman pacman = (Pacman) handlerArguments.get("character");
         long deltaTime = (Long) handlerArguments.get("deltaTime");
-        pacman.setObscure(true);
+        pacman.setObscure(false);
 
         pacman.move(deltaTime);
 
