@@ -55,6 +55,12 @@ public class Pacman extends DynamicCharacter {
 			}
 		}
 
+		else if(c.getStereotype().equals(Stereotype.eSpecCoin)){
+			if (c.isActive()) {
+				coins.add((SpecialCoin)c);
+			}
+		}
+
 		if (c.getStereotype().equals(Stereotype.eGhost))
 			handleGhostCollision(other);
 			//TODO: set state "gameOver"
@@ -131,6 +137,16 @@ public class Pacman extends DynamicCharacter {
 		return coins.size();
 	}
 
+	public int checkScore(){
+		int s=0;
+		for(Coin c : coins){
+			if(c instanceof SpecialCoin)
+				s=s+5;
+			else if(c instanceof Coin)
+				s++;
+		}
+		return s;
+	}
 	public void draw(Graphics g) {
 
 		g.setColor(this.color);

@@ -14,14 +14,14 @@ public class WelcomeState extends GameState {
 
 		if (aKeyCode == KeyEvent.VK_DOWN) {
 			numState++;
-			if (numState > 1)
+			if (numState > 2)
 				numState = 0;
 		}
 
 		if (aKeyCode == KeyEvent.VK_UP) {
 			numState--;
 			if (numState < 0)
-				numState = 1;
+				numState = 2;
 		}
 
 		if (aKeyCode == KeyEvent.VK_ENTER) {
@@ -63,12 +63,20 @@ public class WelcomeState extends GameState {
 			g.drawString(">", 185, 420 );
 		}
 
+		String text4 = "PACMAN TURBO";
+		g.setFont(new Font("Serif", Font.BOLD, 30));
+		g.setColor(Color.white);
+		g.drawString(text4, 270, 465);
+		if(numState==1){
+			g.drawString(">", 245, 465 );
+		}
+
 		String text3 = "EXIT";
 		g.setFont(new Font("Serif", Font.BOLD, 30));
 		g.setColor(Color.white);
-		g.drawString(text3, 270, 465);
-		if(numState==1){
-			g.drawString(">", 245, 465 );
+		g.drawString(text3, 210, 505);
+		if(numState==2){
+			g.drawString(">", 185, 505 );
 		}
 	}
 

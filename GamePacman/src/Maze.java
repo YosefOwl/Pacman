@@ -21,7 +21,7 @@ public class Maze extends JPanel {
 
 		// int mazeSketch[][]; // 1/0  represent wall/coin
 		int xCord, yCord;
-		Character character;
+		Character character = null;
 
 		mazeData = new MazeData[mazeSketch.length][mazeSketch[0].length];
 		for (int i = 0; i < mazeData.length; i++) {
@@ -34,8 +34,12 @@ public class Maze extends JPanel {
 				if (mazeSketch[i][j] == 1) {
 					character = new MazeWall( xCord, yCord);
 				}
-				else {
+				else if (mazeSketch[i][j] == 0){
 					character = new Coin(xCord + COIN_CENTER_X, yCord + COIN_CENTER_Y);
+					coinCount++;
+				}
+				else if (mazeSketch[i][j] == 2){
+					character = new SpecialCoin(xCord + COIN_CENTER_X, yCord + COIN_CENTER_Y);
 					coinCount++;
 				}
 
