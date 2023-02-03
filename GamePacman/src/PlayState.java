@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class PlayState extends GameState {
 
@@ -38,7 +39,8 @@ public class PlayState extends GameState {
 		int x = GameConsts.GHOST_X;
 		int y;
 
-		pacman = new Pacman(speed, GameConsts.PACMAN_X, GameConsts.PACMAN_Y);
+		CharacterStateMachine pacmanStateMachine = buildPacmanStateMachine();
+		pacman = new Pacman(speed, GameConsts.PACMAN_X, GameConsts.PACMAN_Y,pacmanStateMachine);
 		maze.setCharacterInPosition(pacman);
 
 		// set ghosts position and double the ghosts each level
@@ -53,6 +55,18 @@ public class PlayState extends GameState {
 			}
 			x = GameConsts.GHOST_X;
 		}
+	}
+
+	private CharacterStateMachine buildPacmanStateMachine() {
+		ICharacterState exploreState = new ExploringState(new ExploringStateHandler());
+		ICharacterState zombieState = new ZombieState(new ZombieStateHandler());
+
+		CharacterStateMachine stateMachine = new CharacterStateMachine(exploreState);
+
+		stateMachine.AddTransition(new Transition(exploreState,zombieState,"ghostHit"));
+
+		return stateMachine;
+
 	}
 
 	public void processKeyReleased(int aKeyCode) {
@@ -107,7 +121,7 @@ public class PlayState extends GameState {
 
 		collisionDetector.ExecuteOnCollisionEnters(collisions);
 
-		pacman.move(deltaTime);
+		pacman.executeStateBehavior(deltaTime);
 		maze.setCharacterInPosition(pacman);
 
 		for (Ghost ghost : ghosts) {
@@ -186,7 +200,7 @@ public class PlayState extends GameState {
 
 		g.drawString( levelTxt, Game.WIDTH/GameConsts.MAZE_COL, 515 );
 		g.drawString( scoreTxt, Game.WIDTH/2 - scoreTxtWidth, 515 );
-		g.drawString( lifeTxt,Game.WIDTH - lifeTxtWidth*3,515 );
+		g.drawString( lifeTxt, Game.WIDTH - lifeTxtWidth*3,515 );
 
 		// for fun
 		Point pp = pacman.getPosition();
@@ -208,7 +222,7 @@ public class PlayState extends GameState {
 		g.drawString( pacmanData, Game.WIDTH/GameConsts.MAZE_COL, 545 );
 
 		g.drawString( pos, Game.WIDTH/GameConsts.MAZE_COL, 570 );
-		g.drawString( posMaze,Game.WIDTH/GameConsts.MAZE_COL , 590 );
+		g.drawString( posMaze, Game.WIDTH/GameConsts.MAZE_COL , 590 );
 	}
 
 }

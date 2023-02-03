@@ -9,7 +9,7 @@ public class Ghost extends DynamicCharacter {
 	private Queue<Integer> dirQueue = new LinkedList<>();
 
 	public Ghost(float speed, int x, int y) {
-		super(speed, x, y);
+		super(speed, x, y,null);
 
 		setActive(true);
 		setStereotype(Stereotype.eGhost);
@@ -52,6 +52,11 @@ public class Ghost extends DynamicCharacter {
 		}
 	}
 
+	@Override
+	public void executeStateBehavior(long deltaTime) {
+
+	}
+
 	private void setMoveFlow() {
 
 		int newDirection;
@@ -70,19 +75,28 @@ public class Ghost extends DynamicCharacter {
 	public void onCollisionEnter(ICollisional other) {
 
 		if (other.getCharacter().getStereotype().equals(Stereotype.eWall)) {
-
-			if (position.y == lastPosition.y && position.x == lastPosition.x)
-				return;
-
-			if (position.x == lastPosition.x)
-				nextMoveCounterY = 0;
-
-			if(position.y == lastPosition.y)
-				nextMoveCounterX = 0;
-
-			this.setPosition(new Point(this.getLastPosition()));
-			setMoveFlow();
+			handleWallCollision();
+			return;
 		}
+		if (other.getCharacter().getStereotype().equals(Stereotype.eGhost)) {
+			this.setColor(other.getCharacter().getColor());
+			return;
+		}
+
+	}
+
+	private void handleWallCollision() {
+		if (position.y == lastPosition.y && position.x == lastPosition.x)
+			return;
+
+		if (position.x == lastPosition.x)
+			nextMoveCounterY = 0;
+
+		if(position.y == lastPosition.y)
+			nextMoveCounterX = 0;
+
+		this.setPosition(new Point(this.getLastPosition()));
+		setMoveFlow();
 	}
 
 	@Override

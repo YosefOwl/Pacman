@@ -1,13 +1,21 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+
+/*
+pacman State machine
+explorering
+zombie
+
+ */
 public class Pacman extends DynamicCharacter {
 	private List<Coin> coins = new ArrayList<>();
 
-	public Pacman(float speed, int x, int y) {
+	public Pacman(float speed, int x, int y,CharacterStateMachine stateMachine) {
 
-		super(speed, x, y);
+		super(speed, x, y, stateMachine);
 		setSpeed(speed);
 		setActive(true);
 		setStereotype(Stereotype.ePacman);
@@ -20,6 +28,10 @@ public class Pacman extends DynamicCharacter {
 
 		setColor(Color.YELLOW);
 	}
+
+	//public void ExecuteState
+
+
 
 	public void move(long deltaTime) {
 
@@ -62,6 +74,8 @@ public class Pacman extends DynamicCharacter {
 
 	private void handleGhostCollision(ICollisional other) {
 
+		this.getStateMachine().MakeTransition("ghostHit");
+		/*
 		Point pOther = other.getPosition();
 		int directionOther = ((DynamicCharacter)other).getLastDirection();
 
@@ -69,7 +83,7 @@ public class Pacman extends DynamicCharacter {
 			System.out.println("Behind you");
 
 		}
-
+*/
 		/*
 		 checkDirectionCollision();
 		 Sticky
@@ -125,6 +139,17 @@ public class Pacman extends DynamicCharacter {
 
 	public void setDirection(int direction){
 		this.direction = direction;
+	}
+
+	@Override
+	public void executeStateBehavior(long deltaTime) {
+
+		var handlerArguments = new HashMap<String,Object>();
+		handlerArguments.put("deltaTime",deltaTime);
+		handlerArguments.put("character",this);
+
+		stateMachine.getCurrentState().getStateHandler().handleState(handlerArguments);
+
 	}
 
 	public int getCoinsSize() {

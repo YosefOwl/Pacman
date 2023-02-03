@@ -33,86 +33,72 @@ public class CollisionDetector {
                                 DetectCollisionFromBelow(c),
                                 DetectCollisionFromRight(c),
                                 DetectCollisionFromLeft(c)
-                                ).filter(o -> o != null)
+                                )
                         )
+                .flatMap(List::stream)
                 .collect(Collectors.toList());
-
         return collisions;
     }
 
-    private Pair<ICollisional,ICollisional> DetectCollisionInCurrentPosition(DynamicCharacter character) {
+    private List<Pair<ICollisional,ICollisional>> DetectCollisionInCurrentPosition(DynamicCharacter character) {
 
-        Point pCharacter = getMazePointByCharacterPosition(character);
-
-        var collisions = getCollisionalsInPosition(pCharacter)
-                .stream()
-                .filter(c -> !c.getCharacter().equals(character))
-                .collect(Collectors.toList());
-
-        if(collisions.isEmpty()){
-            return null;
-        }
-
-        var bounds = character.getCollider().getBounds();
-
-        List<Line2D> boundsLines = splitBoundsToLines(bounds);
-
-        List<Line2D> otherBoundsLines = splitBoundsToLines(collisions.get(0).getCollider().getBounds());
-
-        Pair<Line2D, Line2D> intersectionLines = findIntersectionBetweenLines(boundsLines, otherBoundsLines);
-        if (intersectionLines != null){
-            return Pair.of(character, collisions.get(0));
-        }
-
-        return null;
+        return DetectCollisionFrom(character,GameConsts.STOP);
     }
 
-    private Pair<ICollisional,ICollisional> DetectCollisionFromAbove(DynamicCharacter character) {
+    private List<Pair<ICollisional,ICollisional>> DetectCollisionFromAbove(DynamicCharacter character) {
         return DetectCollisionFrom(character,GameConsts.UP);
     }
 
-    private Pair<ICollisional,ICollisional> DetectCollisionFromBelow(DynamicCharacter character) {
+    private List<Pair<ICollisional,ICollisional>> DetectCollisionFromBelow(DynamicCharacter character) {
         return DetectCollisionFrom(character,GameConsts.DOWN);
     }
 
-    private Pair<ICollisional,ICollisional> DetectCollisionFromRight(DynamicCharacter character) {
+    private List<Pair<ICollisional,ICollisional>> DetectCollisionFromRight(DynamicCharacter character) {
         return DetectCollisionFrom(character,GameConsts.RIGHT);
     }
 
-    private Pair<ICollisional,ICollisional> DetectCollisionFromLeft(DynamicCharacter character) {
+    private List<Pair<ICollisional,ICollisional>> DetectCollisionFromLeft(DynamicCharacter character) {
         return DetectCollisionFrom(character,GameConsts.LEFT);
     }
 
 
 
-    private Pair<ICollisional,ICollisional> DetectCollisionFrom(DynamicCharacter character,int direction) {
+    private List<Pair<ICollisional,ICollisional>> DetectCollisionFrom(DynamicCharacter character,int direction) {
 
         Point pCharacter = getMazePointByCharacterPosition(character);
 
         Point pOther = getNeighborsFrom(pCharacter,direction);
 
         if (!isPointInBounds(pOther)) {
-            return null;
+            return new ArrayList<>();
         }
 
-        var collisions = getCollisionalsInPosition(pOther);
+        var collisions = getCollisionalsInPosition(pOther)
+                .stream()
+                .filter(c -> !c.equals(character))
+                .collect(Collectors.toList());
 
         if(collisions.isEmpty()){
-            return null;
+            return new ArrayList<>();
         }
 
         var bounds = character.getCollider().getBounds();
 
-        List<Line2D> boundsLines = splitBoundsToLines(bounds);
+        List<Line2D> characterBoundsLines = splitBoundsToLines(bounds);
 
-        List<Line2D> otherBoundsLines = splitBoundsToLines(collisions.get(0).getCollider().getBounds());
+        var characterCollisions = new ArrayList<Pair<ICollisional,ICollisional>>();
 
-        Pair<Line2D, Line2D> intersectionLines = findIntersectionBetweenLines(boundsLines, otherBoundsLines);
-        if (intersectionLines != null){
-             return Pair.of(character, collisions.get(0));
-        }
+        collisions.forEach( c -> {
+            List<Line2D> otherBoundsLines = splitBoundsToLines(c.getCollider().getBounds());
 
-        return null;
+            Pair<Line2D, Line2D> intersectionLines = findIntersectionBetweenLines(characterBoundsLines, otherBoundsLines);
+
+            if (intersectionLines != null){
+                characterCollisions.add(Pair.of(character, c));
+            }
+        });
+
+        return characterCollisions;
     }
 
     private static Pair<Line2D, Line2D> findIntersectionBetweenLines(List<Line2D> boundsLines, List<Line2D> otherBoundsLines) {
@@ -143,7 +129,7 @@ public class CollisionDetector {
             case GameConsts.LEFT:
                 return new Point(pCharacter.x,pCharacter.y - 1);
             default:
-                return null;
+                return new Point(pCharacter.x,pCharacter.y);
         }
     }
 
