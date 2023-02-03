@@ -1,13 +1,17 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Pacman extends DynamicCharacter {
+	private int life;
 	private List<Coin> coins = new ArrayList<>();
 
-	public Pacman(float speed, int x, int y) {
 
-		super(speed, x, y);
+
+	public Pacman(float speed, int x, int y,CharacterStateMachine stateMachine) {
+		super(speed, x, y, stateMachine);
+		this.life = GameConsts.PACMAN_LIFE;
 		setSpeed(speed);
 		setActive(true);
 		setStereotype(Stereotype.ePacman);
@@ -20,6 +24,10 @@ public class Pacman extends DynamicCharacter {
 
 		setColor(Color.YELLOW);
 	}
+
+	//public void ExecuteState
+
+
 
 	public void move(long deltaTime) {
 
@@ -68,6 +76,8 @@ public class Pacman extends DynamicCharacter {
 
 	private void handleGhostCollision(ICollisional other) {
 
+		this.getStateMachine().MakeTransition("ghostHit");
+		/*
 		Point pOther = other.getPosition();
 		int directionOther = ((DynamicCharacter)other).getLastDirection();
 
@@ -75,7 +85,7 @@ public class Pacman extends DynamicCharacter {
 			System.out.println("Behind you");
 
 		}
-
+*/
 		/*
 		 checkDirectionCollision();
 		 Sticky
@@ -133,6 +143,19 @@ public class Pacman extends DynamicCharacter {
 		this.direction = direction;
 	}
 
+	@Override
+	public void executeStateBehavior(long deltaTime) {
+
+		var handlerArguments = new HashMap<String,Object>();
+		handlerArguments.put("deltaTime",deltaTime);
+		handlerArguments.put("character",this);
+
+		var handler = stateMachine.getCurrentState().getStateHandler();
+		if(handler != null)
+			handler.handleState(handlerArguments);
+
+	}
+
 	public int getCoinsSize() {
 		return coins.size();
 	}
@@ -153,5 +176,14 @@ public class Pacman extends DynamicCharacter {
 
 		g.drawOval(position.x, position.y, dimension.width, dimension.height);
 		g.fillOval(position.x, position.y, dimension.width, dimension.height);
+	}
+
+	public int getLife() {
+		return life;
+	}
+
+	public void decreaseLife() {
+		this.life++;
+		this.stateMachine.MakeTransition("lifeDecreased");
 	}
 }

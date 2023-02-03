@@ -10,10 +10,12 @@ public abstract class DynamicCharacter extends Character {
     protected int dy = 0;
     protected int direction;
     protected int lastDirection;
+    protected CharacterStateMachine stateMachine;
 
-    public DynamicCharacter(float speed, int x, int y) {
+    public DynamicCharacter(float speed, int x, int y,CharacterStateMachine stateMachine) {
         super(x, y);
         setSpeed(speed);
+        this.stateMachine = stateMachine;
     }
 
     public float getSpeed() {
@@ -99,4 +101,9 @@ public abstract class DynamicCharacter extends Character {
     public int getLastDirection() {
         return lastDirection;
     }
+
+    public CharacterStateMachine getStateMachine() {
+        return stateMachine;
+    }
+    public abstract void executeStateBehavior(long deltaTime);
 }

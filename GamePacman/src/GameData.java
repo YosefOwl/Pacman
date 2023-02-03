@@ -53,7 +53,6 @@ public class GameData {
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
     };
     private int[][][] mazeLevels = { mazeSketch1, mazeSketch2, mazeSketch3 };
-    static final int LIFE = 3;
     static final int START_LEVEL = 1;
     private static GameData gameDataInstance;
 
@@ -63,7 +62,6 @@ public class GameData {
 
     private GameData() {
         score = 0;
-        life = LIFE;
         level = START_LEVEL;
     }
 
@@ -86,7 +84,6 @@ public class GameData {
         if (level < mazeLevels.length) {
             incLevel();
             setScore(0);
-            setLife(LIFE); // TODO
         }
     }
     public int getScore() {

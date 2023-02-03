@@ -1,4 +1,3 @@
-
 public class PacmanGame extends Game {
 
 	public PacmanGame() {

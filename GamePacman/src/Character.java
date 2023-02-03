@@ -6,6 +6,7 @@ public abstract class Character implements ICollisional {
 	protected boolean isActive;
 	protected Stereotype stereotype;
 	protected Dimension dimension;
+
 	protected Color color;
 
 
@@ -49,6 +50,10 @@ public abstract class Character implements ICollisional {
 
 	public void setColor(Color color) {
 		this.color = color;
+	}
+
+	public Color getColor() {
+		return color;
 	}
 
 	public void draw(Graphics g) {}

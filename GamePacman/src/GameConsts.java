@@ -2,6 +2,7 @@ import java.awt.*;
 
 public final record GameConsts() {
 
+    public static final int PACMAN_LIFE = 3;
     // Maze
     static final int MAZE_ROW = 15;
     static final int MAZE_COL = 26;

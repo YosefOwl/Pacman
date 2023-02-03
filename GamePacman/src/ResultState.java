@@ -27,7 +27,7 @@ public class ResultState extends GameState {
 
 			scores = scores + data.getScore()*data.getLevel();
 			lastLevel = lastLevel + data.getLife();
-			if (data.getLife() == GameData.LIFE && !data.hasNextLevel())
+			if (data.getLife() == GameConsts.PACMAN_LIFE && !data.hasNextLevel())
 				statusGame = GAME_WIN;
 			else
 				statusGame = GAME_OVER;
